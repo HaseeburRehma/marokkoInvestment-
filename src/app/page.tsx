@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import s from "./page.module.css";
 
 /* ── Background images — iconic Morocco landmarks ── */
@@ -16,6 +16,7 @@ type Variant = "a" | "b" | "c";
 export default function Home() {
   const [variant, setVariant] = useState<Variant>("a");
   const [imgIdx, setImgIdx] = useState(0);
+  const [mounted, setMounted] = useState(false);
   const [email, setEmail] = useState("");
   const [honeypot, setHoneypot] = useState("");
   const [consent, setConsent] = useState(false);
@@ -24,11 +25,18 @@ export default function Home() {
   >("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
-  /* Auto-cycle background every 8 s */
+  /* Enable transitions after first paint (avoids strict-mode flash) */
   useEffect(() => {
+    const raf = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  /* Auto-cycle background every 8 s — only after mount */
+  useEffect(() => {
+    if (!mounted) return;
     const t = setInterval(() => setImgIdx((i) => (i + 1) % IMAGES.length), 8000);
     return () => clearInterval(t);
-  }, []);
+  }, [mounted]);
 
   /* Form submit */
   const handleSubmit = useCallback(
@@ -99,7 +107,11 @@ export default function Home() {
               key={src}
               src={src}
               alt=""
-              className={`${s.bgImg} ${i === imgIdx ? s.bgImgActive : ""}`}
+              className={s.bgImg}
+              style={{
+                opacity: i === imgIdx ? 1 : 0,
+                transition: mounted ? "opacity 1.8s ease-in-out" : "none",
+              }}
               loading="eager"
               decoding="async"
             />

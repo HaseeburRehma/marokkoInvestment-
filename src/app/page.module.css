@@ -71,12 +71,8 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
-  opacity: 0;
-  transition: opacity 1.8s ease-in-out;
   will-change: opacity;
-}
-.bgImgActive {
-  opacity: 1 !important;
+  /* opacity + transition controlled via inline style to avoid hydration conflicts */
 }
 
 /* Cinematic gradient overlay — photos visible, text readable */
