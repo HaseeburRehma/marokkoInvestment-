@@ -75,35 +75,46 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    console.log("Sending to Web3Forms with key:", WEB3_KEY.slice(0, 8) + "...");
+
+    const payload = {
+      access_key: WEB3_KEY,
+      subject: `Neue Wartelisten-Anmeldung — ${email.trim()}`,
+      from_name: "Marokko Investment",
+      replyto: email.trim(),
+      "E-Mail": email.trim(),
+      "Formular": variantLabel,
+      "Zeitpunkt": timestamp,
+      "Quelle": "marokkoinvestment.de",
+      message: buildEmailBody(email.trim(), variantLabel, timestamp),
+    };
+
     const res = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify({
-        access_key: WEB3_KEY,
-        subject: `🏛 Neue Wartelisten-Anmeldung — ${email.trim()}`,
-        from_name: "Marokko Investment",
-        replyto: email.trim(),
-
-        /* ── Structured fields — Web3Forms renders these in its email ── */
-        "E-Mail": email.trim(),
-        "Formular": variantLabel,
-        "Zeitpunkt": timestamp,
-        "Quelle": "marokkoinvestment.de",
-
-        /* ── Custom HTML message for rich email body ── */
-        message: buildEmailBody(email.trim(), variantLabel, timestamp),
-      }),
+      body: JSON.stringify(payload),
     });
+
+    /* Handle non-JSON responses gracefully */
+    const contentType = res.headers.get("content-type") ?? "";
+    if (!contentType.includes("application/json")) {
+      const text = await res.text();
+      console.error("Web3Forms returned non-JSON:", res.status, text.slice(0, 500));
+      return NextResponse.json(
+        { error: `Web3Forms-Fehler (${res.status}). Bitte erneut versuchen.` },
+        { status: 502 },
+      );
+    }
 
     const data = await res.json();
 
     if (!data.success) {
       console.error("Web3Forms error:", data);
       return NextResponse.json(
-        { error: "Senden fehlgeschlagen. Bitte erneut versuchen." },
+        { error: data.message ?? "Senden fehlgeschlagen. Bitte erneut versuchen." },
         { status: 502 },
       );
     }
