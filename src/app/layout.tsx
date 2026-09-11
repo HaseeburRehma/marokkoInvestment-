@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter, JetBrains_Mono } from "next/font/google";
-import { LenisProvider } from "@/lib/lenis-provider";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -35,7 +34,6 @@ export const metadata: Metadata = {
     "Immobilien Marokko",
     "Infrastruktur",
     "Erneuerbare Energien",
-    "Investition",
   ],
   metadataBase: new URL("https://marokkoinvestment.de"),
   openGraph: {
@@ -53,10 +51,7 @@ export const metadata: Metadata = {
     description:
       "Investiere in das Marokko von morgen. Private Equity — Nur auf Einladung.",
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -66,10 +61,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${cormorant.variable} ${inter.variable} ${jetbrainsMono.variable}`}
     >
       <body>
-        <LenisProvider>
-          <div className="grain-overlay" aria-hidden="true" />
-          {children}
-        </LenisProvider>
+        <div className="grain" aria-hidden="true" />
+        {children}
       </body>
     </html>
   );

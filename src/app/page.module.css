@@ -1,0 +1,329 @@
+/* === HERO === */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Morocco desert backdrop */
+.bgMorocco {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 70% 20%, rgba(200, 120, 50, 0.35), transparent 55%),
+    radial-gradient(ellipse at 20% 80%, rgba(120, 50, 30, 0.45), transparent 60%),
+    linear-gradient(180deg, #1a1008 0%, #0e0805 55%, #060403 100%);
+}
+
+/* Dune silhouettes */
+.dunes {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.5));
+}
+.dunes::before,
+.dunes::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -10%;
+  right: -10%;
+}
+.dunes::before {
+  height: 60%;
+  background: radial-gradient(ellipse 80% 100% at 30% 100%, #0a0604 40%, transparent 70%);
+}
+.dunes::after {
+  height: 45%;
+  background: radial-gradient(ellipse 90% 100% at 75% 100%, #120a05 45%, transparent 72%);
+}
+
+/* Vignette */
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+/* Brandmark */
+.brandmark {
+  position: absolute;
+  top: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  font-family: var(--font-jetbrains, "JetBrains Mono", monospace);
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  white-space: nowrap;
+}
+
+/* Content */
+.content {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  padding: 40px 24px;
+  max-width: 720px;
+  width: 100%;
+}
+
+/* Eyebrow */
+.eyebrow {
+  font-family: var(--font-jetbrains, "JetBrains Mono", monospace);
+  font-size: 12px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(230, 190, 140, 0.9);
+  margin-bottom: 36px;
+}
+
+/* Headline */
+.headline {
+  font-family: var(--font-cormorant, "Cormorant Garamond", serif);
+  font-weight: 500;
+  color: #f5ede0;
+  letter-spacing: -0.01em;
+  line-height: 1.08;
+  font-size: clamp(36px, 6vw, 76px);
+}
+.headline em {
+  font-style: italic;
+  color: #e6be8c;
+}
+
+/* Form */
+.formWrap {
+  margin-top: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.formInner {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.formRow {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.formInput {
+  flex: 1;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(230, 190, 140, 0.3);
+  color: #fff;
+  padding: 16px 20px;
+  border-radius: 2px;
+  font-family: var(--font-inter, "Inter", sans-serif);
+  font-size: 15px;
+  outline: none;
+  transition: border 0.2s;
+}
+.formInput::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+.formInput:focus {
+  border-color: rgba(230, 190, 140, 0.8);
+}
+
+.formButton {
+  background: #e6be8c;
+  color: #1a1008;
+  border: none;
+  padding: 16px 28px;
+  border-radius: 2px;
+  font-family: var(--font-inter, "Inter", sans-serif);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.formButton:hover {
+  background: #f0d0a5;
+}
+.formButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Error */
+.errorMsg {
+  color: rgba(255, 120, 120, 0.8);
+  font-size: 12px;
+  font-family: var(--font-inter, "Inter", sans-serif);
+}
+
+/* GDPR consent */
+.consentLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  max-width: 440px;
+  text-align: left;
+}
+.consentCheckbox {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  accent-color: #e6be8c;
+  cursor: pointer;
+}
+.consentText {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  line-height: 1.6;
+  font-family: var(--font-inter, "Inter", sans-serif);
+}
+.consentText a {
+  color: rgba(255, 255, 255, 0.35);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s;
+}
+.consentText a:hover {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Microcopy */
+.microcopy {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.02em;
+  font-family: var(--font-inter, "Inter", sans-serif);
+}
+
+/* Success */
+.successMsg {
+  margin-top: 44px;
+}
+.successTitle {
+  font-family: var(--font-cormorant, "Cormorant Garamond", serif);
+  font-size: clamp(22px, 3vw, 32px);
+  color: #e6be8c;
+  margin-bottom: 8px;
+}
+.successSub {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.45);
+  font-family: var(--font-inter, "Inter", sans-serif);
+}
+
+/* Footer */
+.footer {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.footer a {
+  font-family: var(--font-inter, "Inter", sans-serif);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.2);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer a:hover {
+  color: rgba(255, 255, 255, 0.5);
+}
+.dot {
+  color: rgba(255, 255, 255, 0.1);
+  font-size: 10px;
+}
+
+/* ── MOBILE ── */
+@media (max-width: 640px) {
+  .brandmark {
+    top: 24px;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    margin-bottom: 28px;
+  }
+
+  .content {
+    padding: 32px 20px;
+  }
+
+  .formWrap {
+    margin-top: 36px;
+  }
+
+  .formRow {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .formInput {
+    padding: 14px 16px;
+    font-size: 16px; /* prevents iOS zoom */
+  }
+
+  .formButton {
+    padding: 14px 24px;
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .consentLabel {
+    gap: 8px;
+  }
+  .consentText {
+    font-size: 10px;
+  }
+
+  .microcopy {
+    font-size: 11px;
+  }
+
+  .footer {
+    bottom: 12px;
+  }
+  .footer a {
+    font-size: 10px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 380px) {
+  .content {
+    padding: 24px 16px;
+  }
+  .headline {
+    font-size: 32px;
+  }
+  .eyebrow {
+    font-size: 9px;
+    margin-bottom: 24px;
+  }
+}
