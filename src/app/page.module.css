@@ -76,15 +76,21 @@
   will-change: opacity;
 }
 .bgImgActive {
-  opacity: 1;
+  opacity: 1 !important;
 }
 
-/* Cinematic overlay — photos visible, text readable */
+/* Cinematic gradient overlay — photos visible, text readable */
 .bgOverlay {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: rgba(0, 0, 0, 0.3);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.35) 35%,
+    rgba(0, 0, 0, 0.40) 60%,
+    rgba(0, 0, 0, 0.60) 100%
+  );
 }
 
 /* Subtle bottom gradient for footer readability */

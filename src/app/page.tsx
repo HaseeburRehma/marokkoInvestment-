@@ -4,18 +4,11 @@
 import { useState, useEffect, useCallback } from "react";
 import s from "./page.module.css";
 
-/* ── Background images — cinematic Morocco / investment themes ── */
+/* ── Background images — iconic Morocco landmarks ── */
 const IMAGES = [
-  // 1. Golden Sahara desert dunes — iconic Morocco
-  "https://images.unsplash.com/photo-1489493887464-892be6d1daae?auto=format&fit=crop&w=1920&q=80",
-  // 2. Warm sunset over calm ocean — investment horizon
-  "https://images.unsplash.com/photo-1542401886-65d6c61db217?auto=format&fit=crop&w=1920&q=80",
-  // 3. Solar energy farm — renewable investment
-  "https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1920&q=80",
-  // 4. Golden sand dunes bright sun — Merzouga Morocco
-  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80",
-  // 5. Mountain peaks golden hour
-  "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1920&q=80",
+  "/images/casablanca-finance-city.jpg",   // Casablanca Finance City — modern towers & tram
+  "/images/koutoubia-marrakech.jpg",       // Koutoubia Mosque gardens — Marrakech
+  "/images/grand-theatre-rabat.jpg",       // Grand Théâtre de Rabat — Bouregreg river
 ];
 
 type Variant = "a" | "b" | "c";
@@ -31,9 +24,9 @@ export default function Home() {
   >("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
-  /* Auto-cycle background every 6 s */
+  /* Auto-cycle background every 8 s */
   useEffect(() => {
-    const t = setInterval(() => setImgIdx((i) => (i + 1) % IMAGES.length), 6000);
+    const t = setInterval(() => setImgIdx((i) => (i + 1) % IMAGES.length), 8000);
     return () => clearInterval(t);
   }, []);
 
