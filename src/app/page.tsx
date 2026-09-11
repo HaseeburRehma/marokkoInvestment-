@@ -51,30 +51,25 @@ export default function Home() {
       setErrorMsg("");
 
       try {
-        const res = await fetch("https://api.web3forms.com/submit", {
+        const res = await fetch("/api/waitlist", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            access_key: "YOUR_WEB3FORMS_KEY",
-            email,
-            subject: "Neue Wartelisten-Anmeldung — Marokko Investment",
-            from_name: "Marokko Investment Warteliste",
-            message: `Neue Wartelisten-Anmeldung:\n\nE-Mail: ${email}\nZeitpunkt: ${new Date().toLocaleString("de-DE")}`,
-          }),
+          body: JSON.stringify({ email, variant, honeypot }),
         });
         const data = await res.json();
         if (data.success) {
           setStatus("success");
           setEmail("");
         } else {
-          throw new Error();
+          setErrorMsg(data.error ?? "Ein Fehler ist aufgetreten.");
+          setStatus("error");
         }
       } catch {
-        setStatus("success");
-        setEmail("");
+        setErrorMsg("Verbindungsfehler. Bitte erneut versuchen.");
+        setStatus("error");
       }
     },
-    [email, honeypot, consent],
+    [email, variant, honeypot, consent],
   );
 
   /* ── Variant-specific content ── */
