@@ -1,20 +1,17 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import s from "./page.module.css";
 
-/* ── Background images — iconic Morocco landmarks ── */
+/* ── Background images — water (Rabat) first ── */
 const IMAGES = [
+  "/images/grand-theatre-rabat.jpg",       // Grand Théâtre de Rabat — Bouregreg river & boats
   "/images/casablanca-finance-city.jpg",   // Casablanca Finance City — modern towers & tram
   "/images/koutoubia-marrakech.jpg",       // Koutoubia Mosque gardens — Marrakech
-  "/images/grand-theatre-rabat.jpg",       // Grand Théâtre de Rabat — Bouregreg river
 ];
 
-type Variant = "a" | "b" | "c";
-
 export default function Home() {
-  const [variant, setVariant] = useState<Variant>("a");
   const [imgIdx, setImgIdx] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [email, setEmail] = useState("");
@@ -62,7 +59,7 @@ export default function Home() {
         const res = await fetch("/api/waitlist", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, variant, honeypot }),
+          body: JSON.stringify({ email, variant: "a", honeypot }),
         });
         const data = await res.json();
         if (data.success) {
@@ -77,176 +74,124 @@ export default function Home() {
         setStatus("error");
       }
     },
-    [email, variant, honeypot, consent],
+    [email, honeypot, consent],
   );
 
-  /* ── Variant-specific content ── */
-  const buttonLabel =
-    variant === "a" ? "Warteliste" : variant === "b" ? "Anfragen" : "Zugang anfragen";
-
   return (
-    <>
-      {/* ── VARIANT SWITCHER ── */}
-      <nav className={s.switcher}>
-        {(["a", "b", "c"] as const).map((key) => (
-          <button
-            key={key}
-            className={`${s.switchBtn} ${variant === key ? s.switchActive : ""}`}
-            onClick={() => setVariant(key)}
-          >
-            Variante {key.toUpperCase()}
-          </button>
+    <section className={s.hero}>
+      {/* ── Background image slider ── */}
+      <div className={s.bgSlider}>
+        {IMAGES.map((src, i) => (
+          <img
+            key={src}
+            src={src}
+            alt=""
+            className={s.bgImg}
+            style={{
+              opacity: i === imgIdx ? 1 : 0,
+              transition: mounted ? "opacity 2.5s ease-in-out" : "none",
+            }}
+            loading="eager"
+            decoding="async"
+          />
         ))}
-      </nav>
+      </div>
 
-      <section className={s.hero}>
-        {/* ── Background image slider ── */}
-        <div className={s.bgSlider}>
-          {IMAGES.map((src, i) => (
-            <img
-              key={src}
-              src={src}
-              alt=""
-              className={s.bgImg}
-              style={{
-                opacity: i === imgIdx ? 1 : 0,
-                transition: mounted ? "opacity 1.8s ease-in-out" : "none",
-              }}
-              loading="eager"
-              decoding="async"
-            />
-          ))}
-        </div>
+      {/* Overlays */}
+      <div className={s.bgOverlay} />
+      <div className={s.dunes} />
+      <div className={s.vignette} />
 
-        {/* Overlays */}
-        <div className={s.bgOverlay} />
-        <div className={s.dunes} />
-        <div className={s.vignette} />
+      {/* ── Content ── */}
+      <div className={s.content}>
+        <p className={s.eyebrow}>Nur auf Einladung</p>
+        <h1 className={s.headlineA}>
+          Investiere in das
+          <br />
+          <em>Marokko von morgen.</em>
+        </h1>
+      </div>
 
-        {/* ── VARIANT A ── */}
-        <div
-          className={`${s.content} ${variant === "a" ? s.visible : s.hidden}`}
-        >
-          <p className={s.eyebrow}>Nur auf Einladung</p>
-          <h1 className={s.headlineA}>
-            Investiere in das
-            <br />
-            <em>Marokko von morgen.</em>
-          </h1>
-        </div>
-
-        {/* ── VARIANT B ── */}
-        <div
-          className={`${s.content} ${variant === "b" ? s.visible : s.hidden}`}
-        >
-          <p className={s.eyebrow}>Private Equity · Marokko</p>
-          <h1 className={s.headlineB}>Ein Markt. Wenige Partner.</h1>
-          <p className={s.sub}>
-            Wir investieren in Immobilien, Infrastruktur und erneuerbare Energien
-            in Marokko.
-            <br />
-            Der Zugang ist begrenzt. Tragen Sie sich für die Warteliste ein.
-          </p>
-        </div>
-
-        {/* ── VARIANT C ── */}
-        <div
-          className={`${s.content} ${s.contentWide} ${variant === "c" ? s.visible : s.hidden}`}
-        >
-          <p className={s.subLabel}>Private Equity</p>
-          <div className={s.line} />
-          <h1 className={s.headlineC}>
-            Marokko.
-            <br />
-            <em>Vor allen anderen.</em>
-          </h1>
-          <div className={s.line} />
-        </div>
-
-        {/* ── Shared form (always visible below active variant) ── */}
-        <div className={s.formSection}>
-          {status === "success" ? (
-            <div className={s.successMsg}>
-              <p className={s.successTitle}>
-                Danke — Sie stehen auf der Warteliste.
-              </p>
-              <p className={s.successSub}>Wir melden uns bei Ihnen.</p>
-            </div>
-          ) : (
-            <div className={s.formWrap}>
-              <form onSubmit={handleSubmit} className={s.formInner}>
-                <div className={s.formRow}>
-                  <input
-                    type="email"
-                    className={s.formInput}
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      if (status === "error") setStatus("idle");
-                    }}
-                    placeholder="Ihre E-Mail-Adresse"
-                    autoComplete="email"
-                    disabled={status === "loading"}
-                  />
-                  <button
-                    type="submit"
-                    className={s.formButton}
-                    disabled={status === "loading"}
-                  >
-                    {status === "loading" ? "…" : buttonLabel}
-                  </button>
-                </div>
-
-                {/* Honeypot */}
+      {/* ── Form ── */}
+      <div className={s.formSection}>
+        {status === "success" ? (
+          <div className={s.successMsg}>
+            <p className={s.successTitle}>
+              Danke — Sie stehen auf der Warteliste.
+            </p>
+            <p className={s.successSub}>Wir melden uns bei Ihnen.</p>
+          </div>
+        ) : (
+          <div className={s.formWrap}>
+            <form onSubmit={handleSubmit} className={s.formInner}>
+              <div className={s.formRow}>
                 <input
-                  type="text"
-                  name="website"
-                  value={honeypot}
-                  onChange={(e) => setHoneypot(e.target.value)}
-                  style={{ display: "none" }}
-                  tabIndex={-1}
-                  autoComplete="off"
-                  aria-hidden="true"
+                  type="email"
+                  className={s.formInput}
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (status === "error") setStatus("idle");
+                  }}
+                  placeholder="Ihre E-Mail-Adresse"
+                  autoComplete="email"
+                  disabled={status === "loading"}
                 />
+                <button
+                  type="submit"
+                  className={s.formButton}
+                  disabled={status === "loading"}
+                >
+                  {status === "loading" ? "…" : "Warteliste"}
+                </button>
+              </div>
 
-                {status === "error" && errorMsg && (
-                  <p className={s.errorMsg}>{errorMsg}</p>
-                )}
+              {/* Honeypot */}
+              <input
+                type="text"
+                name="website"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                style={{ display: "none" }}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+              />
 
-                <label className={s.consentLabel}>
-                  <input
-                    type="checkbox"
-                    className={s.consentCheckbox}
-                    checked={consent}
-                    onChange={(e) => {
-                      setConsent(e.target.checked);
-                      if (status === "error") setStatus("idle");
-                    }}
-                  />
-                  <span className={s.consentText}>
-                    Ich stimme der Verarbeitung meiner E-Mail-Adresse gemäß der{" "}
-                    <a href="/datenschutz">Datenschutzerklärung</a> zu.
-                  </span>
-                </label>
-              </form>
+              {status === "error" && errorMsg && (
+                <p className={s.errorMsg}>{errorMsg}</p>
+              )}
 
-              <p className={s.microcopy}>
-                {variant === "a"
-                  ? "Begrenzte Plätze · Private Equity · Immobilien, Infrastruktur & Energie"
-                  : variant === "b"
-                    ? "Sie erhalten eine persönliche Einladung, sobald ein Platz frei wird."
-                    : "Immobilien · Infrastruktur · Solarparks · Nur nach Prüfung"}
-              </p>
-            </div>
-          )}
-        </div>
+              <label className={s.consentLabel}>
+                <input
+                  type="checkbox"
+                  className={s.consentCheckbox}
+                  checked={consent}
+                  onChange={(e) => {
+                    setConsent(e.target.checked);
+                    if (status === "error") setStatus("idle");
+                  }}
+                />
+                <span className={s.consentText}>
+                  Ich stimme der Verarbeitung meiner E-Mail-Adresse gemäß der{" "}
+                  <a href="/datenschutz">Datenschutzerklärung</a> zu.
+                </span>
+              </label>
+            </form>
 
-        <footer className={s.footer}>
-          <a href="/impressum">Impressum</a>
-          <span className={s.dot}>·</span>
-          <a href="/datenschutz">Datenschutz</a>
-        </footer>
-      </section>
-    </>
+            <p className={s.microcopy}>
+              Begrenzte Plätze · Private Equity · Immobilien, Infrastruktur &
+              Energie
+            </p>
+          </div>
+        )}
+      </div>
+
+      <footer className={s.footer}>
+        <a href="/impressum">Impressum</a>
+        <span className={s.dot}>·</span>
+        <a href="/datenschutz">Datenschutz</a>
+      </footer>
+    </section>
   );
 }
