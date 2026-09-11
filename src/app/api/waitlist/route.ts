@@ -110,9 +110,10 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error("Waitlist API error:", err);
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("Waitlist API error:", message, err);
     return NextResponse.json(
-      { error: "Ein Fehler ist aufgetreten. Bitte erneut versuchen." },
+      { error: `Ein Fehler ist aufgetreten. Bitte erneut versuchen. [${message}]` },
       { status: 500 },
     );
   }
