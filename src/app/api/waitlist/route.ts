@@ -14,117 +14,6 @@ function isRateLimited(ip: string): boolean {
   return false;
 }
 
-/* ── Beautiful HTML email template ── */
-function buildEmail(email: string, variant: string, timestamp: string): string {
-  const variantLabel =
-    variant === "a"
-      ? "Variante A — Warteliste"
-      : variant === "b"
-        ? "Variante B — Anfragen"
-        : "Variante C — Zugang anfragen";
-
-  return `
-<!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Neue Wartelisten-Anmeldung</title>
-</head>
-<body style="margin:0;padding:0;background-color:#0f0d0a;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#0f0d0a;padding:40px 20px;">
-    <tr>
-      <td align="center">
-        <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
-
-          <!-- Header -->
-          <tr>
-            <td style="padding:32px 40px 24px;text-align:center;border-bottom:1px solid rgba(230,190,140,0.2);">
-              <p style="margin:0;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:#e6be8c;font-family:'Courier New',monospace;">
-                Marokko Investment
-              </p>
-            </td>
-          </tr>
-
-          <!-- Main content -->
-          <tr>
-            <td style="padding:48px 40px 40px;background:linear-gradient(180deg,#161310 0%,#1a1611 100%);border-left:1px solid rgba(230,190,140,0.08);border-right:1px solid rgba(230,190,140,0.08);">
-
-              <h1 style="margin:0 0 8px;font-size:28px;font-weight:400;color:#f5ede0;font-family:Georgia,'Times New Roman',serif;letter-spacing:-0.01em;">
-                Neue Anmeldung
-              </h1>
-              <p style="margin:0 0 36px;font-size:14px;color:rgba(255,255,255,0.4);font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-                Ein neuer Interessent hat sich auf die Warteliste eingetragen.
-              </p>
-
-              <!-- Data card -->
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:rgba(255,255,255,0.04);border:1px solid rgba(230,190,140,0.12);border-radius:8px;overflow:hidden;">
-                <tr>
-                  <td style="padding:24px 28px;border-bottom:1px solid rgba(230,190,140,0.08);">
-                    <p style="margin:0 0 4px;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(230,190,140,0.6);font-family:'Courier New',monospace;">
-                      E-Mail-Adresse
-                    </p>
-                    <p style="margin:0;font-size:18px;color:#fff;font-weight:500;">
-                      <a href="mailto:${email}" style="color:#e6be8c;text-decoration:none;">${email}</a>
-                    </p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:20px 28px;">
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-                      <tr>
-                        <td width="50%" style="vertical-align:top;">
-                          <p style="margin:0 0 4px;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(230,190,140,0.6);font-family:'Courier New',monospace;">
-                            Zeitpunkt
-                          </p>
-                          <p style="margin:0;font-size:14px;color:rgba(255,255,255,0.7);">
-                            ${timestamp}
-                          </p>
-                        </td>
-                        <td width="50%" style="vertical-align:top;">
-                          <p style="margin:0 0 4px;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(230,190,140,0.6);font-family:'Courier New',monospace;">
-                            Gesehen auf
-                          </p>
-                          <p style="margin:0;font-size:14px;color:rgba(255,255,255,0.7);">
-                            ${variantLabel}
-                          </p>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- CTA -->
-              <table role="presentation" cellpadding="0" cellspacing="0" style="margin:36px 0 0;">
-                <tr>
-                  <td style="background:#e6be8c;border-radius:6px;">
-                    <a href="mailto:${email}" style="display:inline-block;padding:14px 32px;font-size:13px;font-weight:600;color:#1a1008;text-decoration:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-                      Antworten
-                    </a>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- Footer -->
-          <tr>
-            <td style="padding:28px 40px;text-align:center;border-top:1px solid rgba(230,190,140,0.1);">
-              <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.2);font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-                Marokko Investment · marokkoinvestment.de
-              </p>
-            </td>
-          </tr>
-
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>`.trim();
-}
-
 /* ── POST handler ── */
 export async function POST(req: NextRequest) {
   try {
@@ -169,7 +58,12 @@ export async function POST(req: NextRequest) {
       minute: "2-digit",
     });
 
-    const htmlEmail = buildEmail(email.trim(), variant ?? "a", timestamp);
+    const variantLabel =
+      variant === "a"
+        ? "Warteliste"
+        : variant === "b"
+          ? "Anfragen"
+          : "Zugang anfragen";
 
     /* ── Send via Web3Forms ── */
     const WEB3_KEY = process.env.WEB3FORMS_KEY;
@@ -183,17 +77,24 @@ export async function POST(req: NextRequest) {
 
     const res = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
       body: JSON.stringify({
         access_key: WEB3_KEY,
-        subject: `Neue Wartelisten-Anmeldung — ${email.trim()}`,
-        from_name: "Marokko Investment Warteliste",
-        to: "info@tylotech.de",
-        message: htmlEmail,
-        // Web3Forms fields
-        email: email.trim(),
-        variant: variant ?? "a",
-        timestamp,
+        subject: `🏛 Neue Wartelisten-Anmeldung — ${email.trim()}`,
+        from_name: "Marokko Investment",
+        replyto: email.trim(),
+
+        /* ── Structured fields — Web3Forms renders these in its email ── */
+        "E-Mail": email.trim(),
+        "Formular": variantLabel,
+        "Zeitpunkt": timestamp,
+        "Quelle": "marokkoinvestment.de",
+
+        /* ── Custom HTML message for rich email body ── */
+        message: buildEmailBody(email.trim(), variantLabel, timestamp),
       }),
     });
 
@@ -202,7 +103,7 @@ export async function POST(req: NextRequest) {
     if (!data.success) {
       console.error("Web3Forms error:", data);
       return NextResponse.json(
-        { error: "Senden fehlgeschlagen." },
+        { error: "Senden fehlgeschlagen. Bitte erneut versuchen." },
         { status: 502 },
       );
     }
@@ -211,8 +112,92 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("Waitlist API error:", err);
     return NextResponse.json(
-      { error: "Ein Fehler ist aufgetreten." },
+      { error: "Ein Fehler ist aufgetreten. Bitte erneut versuchen." },
       { status: 500 },
     );
   }
+}
+
+/* ── Branded HTML email body ── */
+function buildEmailBody(
+  email: string,
+  formLabel: string,
+  timestamp: string,
+): string {
+  return `
+<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;color:#f5ede0;">
+
+  <!-- Header bar -->
+  <div style="text-align:center;padding:28px 0 20px;border-bottom:1px solid rgba(230,190,140,0.25);">
+    <span style="font-size:11px;letter-spacing:0.35em;text-transform:uppercase;color:#e6be8c;font-family:'Courier New',monospace;">
+      ✦ &nbsp;Marokko Investment&nbsp; ✦
+    </span>
+  </div>
+
+  <!-- Title -->
+  <div style="padding:36px 0 12px;">
+    <h2 style="margin:0;font-size:26px;font-weight:400;color:#f5ede0;font-family:Georgia,'Times New Roman',serif;">
+      Neue Wartelisten-Anmeldung
+    </h2>
+    <p style="margin:8px 0 0;font-size:14px;color:rgba(245,237,224,0.5);">
+      Ein neuer Interessent möchte auf die Warteliste.
+    </p>
+  </div>
+
+  <!-- Data card -->
+  <div style="background:rgba(230,190,140,0.06);border:1px solid rgba(230,190,140,0.15);border-radius:8px;padding:24px 28px;margin:20px 0;">
+    <table style="width:100%;border-collapse:collapse;">
+      <tr>
+        <td style="padding:0 0 18px;border-bottom:1px solid rgba(230,190,140,0.1);">
+          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(230,190,140,0.7);font-family:'Courier New',monospace;margin-bottom:6px;">
+            E-Mail-Adresse
+          </div>
+          <a href="mailto:${email}" style="font-size:17px;color:#e6be8c;text-decoration:none;font-weight:500;">
+            ${email}
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:18px 0 0;">
+          <table style="width:100%;border-collapse:collapse;">
+            <tr>
+              <td style="width:50%;vertical-align:top;">
+                <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(230,190,140,0.7);font-family:'Courier New',monospace;margin-bottom:6px;">
+                  Zeitpunkt
+                </div>
+                <div style="font-size:14px;color:rgba(245,237,224,0.75);">
+                  ${timestamp}
+                </div>
+              </td>
+              <td style="width:50%;vertical-align:top;">
+                <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(230,190,140,0.7);font-family:'Courier New',monospace;margin-bottom:6px;">
+                  Formular
+                </div>
+                <div style="font-size:14px;color:rgba(245,237,224,0.75);">
+                  ${formLabel}
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- CTA button -->
+  <div style="padding:8px 0 32px;">
+    <a href="mailto:${email}?subject=Marokko%20Investment%20%E2%80%94%20Ihre%20Wartelisten-Anfrage&body=Sehr%20geehrte%20Damen%20und%20Herren%2C%0A%0Avielen%20Dank%20f%C3%BCr%20Ihr%20Interesse%20an%20Marokko%20Investment.%0A%0A"
+       style="display:inline-block;background:#e6be8c;color:#1a1008;padding:14px 36px;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+      Interessenten antworten →
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <div style="text-align:center;padding:20px 0;border-top:1px solid rgba(230,190,140,0.12);">
+    <span style="font-size:11px;color:rgba(245,237,224,0.25);font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+      Marokko Investment · marokkoinvestment.de
+    </span>
+  </div>
+
+</div>`.trim();
 }
