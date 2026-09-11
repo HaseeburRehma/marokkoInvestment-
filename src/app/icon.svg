@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#0f0d0a"/>
+  <rect x="24" y="24" width="464" height="464" rx="76" fill="none" stroke="#e6be8c" stroke-width="2" opacity="0.2"/>
+  <!-- Elegant serif M with Moroccan arch feel -->
+  <path d="
+    M 128 390
+    L 128 160
+    L 136 160
+    L 256 310
+    L 376 160
+    L 384 160
+    L 384 390
+    L 352 390
+    L 352 228
+    L 256 348
+    L 160 228
+    L 160 390
+    Z
+  " fill="#e6be8c"/>
+  <!-- Subtle top accent line -->
+  <line x1="176" y1="130" x2="336" y2="130" stroke="#e6be8c" stroke-width="2" opacity="0.4"/>
+</svg>

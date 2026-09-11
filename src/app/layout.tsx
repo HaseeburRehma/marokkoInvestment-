@@ -52,6 +52,10 @@ export const metadata: Metadata = {
       "Investiere in das Marokko von morgen. Private Equity — Nur auf Einladung.",
   },
   robots: { index: true, follow: true },
+  icons: {
+    icon: { url: "/icon.svg", type: "image/svg+xml" },
+    apple: { url: "/apple-icon.svg", type: "image/svg+xml" },
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
