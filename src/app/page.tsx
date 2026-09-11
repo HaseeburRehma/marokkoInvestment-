@@ -56,17 +56,37 @@ export default function Home() {
       setErrorMsg("");
 
       try {
-        const res = await fetch("/api/waitlist", {
+        /* Submit directly to Web3Forms (free plan requires client-side) */
+        const res = await fetch("https://api.web3forms.com/submit", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, variant: "a", honeypot }),
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            access_key: "241ac8bf-f24f-4a36-b8f4-364360c35415",
+            subject: `Neue Wartelisten-Anmeldung — ${email.trim()}`,
+            from_name: "Marokko Investment",
+            replyto: email.trim(),
+            "E-Mail": email.trim(),
+            "Formular": "Warteliste",
+            "Zeitpunkt": new Date().toLocaleString("de-DE", {
+              timeZone: "Europe/Berlin",
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+            "Quelle": "marokkoinvestment.de",
+          }),
         });
         const data = await res.json();
         if (data.success) {
           setStatus("success");
           setEmail("");
         } else {
-          setErrorMsg(data.error ?? "Ein Fehler ist aufgetreten.");
+          setErrorMsg(data.message ?? "Ein Fehler ist aufgetreten.");
           setStatus("error");
         }
       } catch {
