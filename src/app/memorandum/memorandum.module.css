@@ -845,18 +845,38 @@
 @media (max-width: 1024px) {
   :root { --m-py: 80px; }
   .anfrageGrid { grid-template-columns: 1fr; gap: 48px; }
-  .closingInner { grid-template-columns: 1fr; gap: 24px; }
-  .closingImgL, .closingImgR { display: none; }
   .secHeader { grid-template-columns: 1fr; }
   .ablaufHeader { grid-template-columns: 1fr; }
-  .sektorCards { grid-template-columns: repeat(2, 1fr); }
   .footerGrid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+
+  /* Sektoren */
+  .imgGrid { height: 380px; }
+  .sektorCards { grid-template-columns: repeat(2, 1fr); }
+
+  /* Inhalt */
+  .inhaltInner { grid-template-columns: 1fr; gap: 40px; }
+
+  /* Vertrauen */
   .vHero { grid-template-columns: 1fr; }
   .vText { padding: 40px 32px; }
   .vImg { aspect-ratio: 16/9; }
-  .inhaltInner { grid-template-columns: 1fr; gap: 40px; }
+
+  /* Closing */
+  .closingInner { grid-template-columns: 1fr 3fr 1fr; gap: 20px; padding: 24px; }
+  .closingImgL, .closingImgR { min-height: 320px; }
+
+  /* Strip */
+  .strip { grid-template-columns: repeat(2, 1fr); }
+  .stripItem + .stripItem { border-left: none; }
+  .stripItem:nth-child(odd) + .stripItem { border-left: 1px solid var(--m-gold-border); }
+  .stripItem:nth-child(n+3) { border-top: 1px solid var(--m-gold-border); }
+
+  /* FAQ */
   .faqGrid { grid-template-columns: 1fr; gap: 40px; }
   .faqLeft { position: static; }
+
+  /* Steps */
+  .stepsGrid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
@@ -875,27 +895,34 @@
     padding-left: 20px; padding-right: 20px;
   }
 
+  /* Sektoren */
   .imgGrid { grid-template-columns: 1fr; height: auto; }
   .imgLg { aspect-ratio: 16/10; height: auto; }
   .imgStack { flex-direction: row; }
   .imgSm { aspect-ratio: 1; }
   .sektorCards { grid-template-columns: repeat(2, 1fr); }
 
-  .stepsGrid { grid-template-columns: 1fr; }
+  /* Vertrauen */
   .officeGrid { grid-template-columns: 1fr; }
   .officeCard { border-left: none; padding-left: 0; border-top: 1px solid var(--m-gold-border); }
   .officeCard:first-child { border-top: none; }
 
+  /* Steps */
+  .stepsGrid { grid-template-columns: 1fr; }
+
+  /* Timeline */
   .tlItem { grid-template-columns: 24px 1fr; }
   .tlSpacer { display: none; }
+  .tlLine { order: -1; }
   .tlRight .tlContent { order: unset; }
-  .tlRight .tlLine { order: unset; }
+  .tlRight .tlLine { order: -1; }
   .tlRight .tlSpacer { order: unset; }
   .tlContent { padding: 0 0 0 16px; }
 
-  .strip { grid-template-columns: repeat(2, 1fr); }
-  .stripItem + .stripItem { border-left: none; }
-  .stripItem:nth-child(n+3) { border-top: 1px solid var(--m-gold-border); }
+  /* Closing */
+  .closingInner { grid-template-columns: 1fr; gap: 24px; padding: 32px 20px; }
+  .closingImgL, .closingImgR { min-height: 220px; max-height: 280px; }
+
   .formCard { padding: 28px 20px; }
   .closingBtns { flex-direction: column; align-items: center; }
   .closingChecks { flex-direction: column; align-items: center; gap: 12px; }
@@ -906,4 +933,5 @@
   .heroH1 { font-size: 1.75rem; }
   .sektorCards { grid-template-columns: 1fr; }
   .imgStack { flex-direction: column; }
+  .closingImgL, .closingImgR { display: none; }
 }
