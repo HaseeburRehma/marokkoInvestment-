@@ -547,30 +547,34 @@ export default function MemorandumPage() {
 
       {/* ═══ 5 · INHALT ═══ */}
       <section className={s.inhalt}>
-        <div ref={r3.ref} className={`${s.inhaltInner} ${s.reveal} ${r3.cls}`}>
-          <div className={s.inhaltLeft}>
-            <h2 className={s.secTitle}>{C.inhaltTitle}</h2>
-            <p className={s.secSub}>{C.inhaltSub}</p>
-            <ol className={s.inhaltList}>
-              {C.inhaltItems.map((item, i) => (
-                <li key={i}><span className={s.num}>{String(i + 1).padStart(2, "0")}</span><span>{item}</span></li>
-              ))}
-            </ol>
-          </div>
-          <div className={s.inhaltRight}>
-            <div className={s.pdfMock}>
-              <div className={s.pdfMockBody}>
-                <div className={s.pdfMockArch}>
-                  <svg width="80" height="100" viewBox="0 0 80 100" fill="none">
-                    <path d="M10 100V40C10 23.4 23.4 10 40 10s30 13.4 30 30v60" stroke="#B08D45" strokeWidth="1.2" opacity="0.7" />
-                    <path d="M22 100V45c0-9.9 8.1-18 18-18s18 8.1 18 18v55" stroke="#B08D45" strokeWidth="0.8" opacity="0.35" />
-                  </svg>
+        <div ref={r3.ref} className={`${s.inhaltCard} ${s.reveal} ${r3.cls}`}>
+          <div className={s.inhaltInner}>
+            <div className={s.inhaltLeft}>
+              <h2 className={s.secTitle}>{C.inhaltTitle}</h2>
+              <p className={s.secSub}>{C.inhaltSub}</p>
+              <ol className={s.inhaltList}>
+                {C.inhaltItems.map((item, i) => (
+                  <li key={i}><span className={s.num}>{String(i + 1).padStart(2, "0")}</span><span>{item}</span></li>
+                ))}
+              </ol>
+            </div>
+            <div className={s.inhaltRight}>
+              <div className={s.pdfMockWrap}>
+                <div className={s.pdfMock}>
+                  <div className={s.pdfMockBody}>
+                    <div className={s.pdfMockArch}>
+                      <svg width="80" height="100" viewBox="0 0 80 100" fill="none">
+                        <path d="M10 100V40C10 23.4 23.4 10 40 10s30 13.4 30 30v60" stroke="#B08D45" strokeWidth="1.2" opacity="0.7" />
+                        <path d="M22 100V45c0-9.9 8.1-18 18-18s18 8.1 18 18v55" stroke="#B08D45" strokeWidth="0.8" opacity="0.35" />
+                      </svg>
+                    </div>
+                    <div className={s.pdfDivider} />
+                    <p className={s.pdfMockLabel}>Marokko Investment</p>
+                    <h4>Das vertrauliche Investoren-Memorandum</h4>
+                  </div>
+                  <div className={s.pdfMockFoot}><span>28 Seiten</span><span>PDF</span><span>Stand 2026</span></div>
                 </div>
-                <div className={s.pdfDivider} />
-                <p className={s.pdfMockLabel}>Marokko Investment</p>
-                <h4>Das vertrauliche Investoren-Memorandum</h4>
               </div>
-              <div className={s.pdfMockFoot}><span>28 Seiten</span><span>PDF</span><span>Stand 2026</span></div>
             </div>
           </div>
         </div>
@@ -579,23 +583,25 @@ export default function MemorandumPage() {
       {/* ═══ 6 · VERTRAUEN ═══ */}
       <section className={s.vertrauen} id="vertrauen">
         <div ref={r4.ref} className={`${s.reveal} ${r4.cls}`}>
-          <div className={s.vHero}>
-            <div className={s.vText}>
-              <h2 className={s.secTitle}>{C.vertrauenTitle}</h2>
-              <p className={s.vSub}>{C.vertrauenSub}</p>
-            </div>
-            <div className={s.vImg}><img src="/images/office-casablanca.jpg" alt="Büro in Casablanca" /><span className={s.imgLabel}><span className={s.dot} /> Unser Büro in Casablanca</span></div>
-          </div>
-          <div className={`${s.officeGrid} ${s.stagger} ${r4.visible ? s.revealed : ""}`}>
-            {C.offices.map((o) => (
-              <div key={o.city} className={s.officeCard}>
-                <ArchIcon size={32} />
-                <h4>{o.city}</h4>
-                <p>{o.desc}</p>
+          <div className={s.vCard}>
+            <div className={s.vHero}>
+              <div className={s.vText}>
+                <h2 className={s.secTitle}>{C.vertrauenTitle}</h2>
+                <p className={s.vSub}>{C.vertrauenSub}</p>
               </div>
-            ))}
+              <div className={s.vImg}><img src="/images/office-casablanca.jpg" alt="Büro in Casablanca" /><span className={s.imgLabel}><span className={s.dot} /> Unser Büro in Casablanca</span></div>
+            </div>
+            <div className={`${s.officeGrid} ${s.stagger} ${r4.visible ? s.revealed : ""}`}>
+              {C.offices.map((o) => (
+                <div key={o.city} className={s.officeCard}>
+                  <ArchIcon size={32} />
+                  <h4>{o.city}</h4>
+                  <p>{o.desc}</p>
+                </div>
+              ))}
+            </div>
+            <ArchDecor />
           </div>
-          <ArchDecor />
         </div>
       </section>
 
