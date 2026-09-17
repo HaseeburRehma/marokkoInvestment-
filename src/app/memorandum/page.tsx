@@ -559,7 +559,12 @@ export default function MemorandumPage() {
           <div className={s.inhaltRight}>
             <div className={s.pdfMock}>
               <div className={s.pdfMockBody}>
-                <LogoSvg size={48} />
+                <div className={s.pdfMockArch}>
+                  <svg width="80" height="100" viewBox="0 0 80 100" fill="none">
+                    <path d="M10 100V40C10 23.4 23.4 10 40 10s30 13.4 30 30v60" stroke="#B08D45" strokeWidth="1.2" opacity="0.7" />
+                    <path d="M22 100V45c0-9.9 8.1-18 18-18s18 8.1 18 18v55" stroke="#B08D45" strokeWidth="0.8" opacity="0.35" />
+                  </svg>
+                </div>
                 <div className={s.pdfDivider} />
                 <p className={s.pdfMockLabel}>Marokko Investment</p>
                 <h4>Das vertrauliche Investoren-Memorandum</h4>

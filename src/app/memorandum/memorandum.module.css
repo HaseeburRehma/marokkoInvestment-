@@ -480,9 +480,11 @@
 .imgGrid {
   max-width: var(--m-max); margin: 0 auto 48px;
   display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px;
+  height: 480px;
 }
 .imgLg {
   position: relative; border-radius: var(--m-radius); overflow: hidden;
+  height: 100%;
 }
 .imgLg img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
 .imgLg:hover img { transform: scale(1.03); }
@@ -551,10 +553,11 @@
 .pdfMock:hover { transform: translateY(-4px); }
 .pdfMockBody { padding: 40px 28px 28px; text-align: center; }
 .pdfDivider { width: 40px; height: 1px; background: var(--m-gold); margin: 20px auto; opacity: 0.3; }
+.pdfMockArch { margin-bottom: 8px; }
 .pdfMockLabel {
-  font-family: var(--font-jetbrains), monospace;
-  font-size: 0.63rem; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--m-muted); margin: 0 0 8px;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 0.82rem; letter-spacing: 0.02em;
+  color: var(--m-muted); margin: 0 0 10px;
 }
 .pdfMockBody h4 {
   font-family: var(--font-cormorant), Georgia, serif;
@@ -588,15 +591,15 @@
 .vImg img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .officeGrid {
   max-width: var(--m-max); margin: 0 auto;
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+  border-top: 1px solid var(--m-gold-border);
 }
 .officeCard {
-  background: var(--m-card);
-  border: 1px solid var(--m-gold-border);
-  border-radius: var(--m-radius); padding: 28px 24px;
-  transition: border-color 0.3s, transform 0.3s;
+  padding: 32px 32px 32px 0;
+  border-left: 1px solid var(--m-gold-border);
+  padding-left: 32px;
 }
-.officeCard:hover { border-color: rgba(176, 141, 69, 0.35); transform: translateY(-3px); }
+.officeCard:first-child { border-left: none; padding-left: 0; }
 .officeCard h4 {
   font-family: var(--font-cormorant), Georgia, serif;
   font-size: 1.15rem; font-weight: 500; margin: 14px 0 8px; color: var(--m-text);
@@ -769,9 +772,14 @@
   max-width: var(--m-max); margin: 0 auto;
   display: grid; grid-template-columns: 1fr 2fr 1fr;
   gap: 32px; align-items: center;
+  background: var(--m-card);
+  border: 1px solid var(--m-gold-border);
+  border-radius: 20px;
+  padding: 32px;
+  overflow: hidden;
 }
 .closingImgL, .closingImgR {
-  border-radius: var(--m-radius); overflow: hidden; aspect-ratio: 3/4;
+  border-radius: var(--m-radius); overflow: hidden; min-height: 420px;
 }
 .closingImgL img, .closingImgR img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; }
 .closingImgL:hover img, .closingImgR:hover img { transform: scale(1.04); }
@@ -868,14 +876,16 @@
     padding-left: 20px; padding-right: 20px;
   }
 
-  .imgGrid { grid-template-columns: 1fr; }
-  .imgLg { aspect-ratio: 16/10; }
+  .imgGrid { grid-template-columns: 1fr; height: auto; }
+  .imgLg { aspect-ratio: 16/10; height: auto; }
   .imgStack { flex-direction: row; }
   .imgSm { aspect-ratio: 1; }
   .sektorCards { grid-template-columns: repeat(2, 1fr); }
 
   .stepsGrid { grid-template-columns: 1fr; }
   .officeGrid { grid-template-columns: 1fr; }
+  .officeCard { border-left: none; padding-left: 0; border-top: 1px solid var(--m-gold-border); }
+  .officeCard:first-child { border-top: none; }
 
   .tlItem { grid-template-columns: 24px 1fr; }
   .tlSpacer { display: none; }
