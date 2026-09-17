@@ -102,6 +102,35 @@ function LogoSvg({ size = 28 }: { size?: number }) {
   );
 }
 
+/* ── Moroccan arch icon for office cards ── */
+function ArchIcon({ size = 32 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 38" fill="none">
+      <path d="M4 38V16C4 9.37 9.37 4 16 4s12 5.37 12 12v22" stroke="#B08D45" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
+      <path d="M9 38V18c0-3.87 3.13-7 7-7s7 3.13 7 7v20" stroke="#B08D45" strokeWidth="1" strokeLinecap="round" opacity="0.35" />
+    </svg>
+  );
+}
+
+/* ── Decorative Moroccan arch row ── */
+function ArchDecor() {
+  return (
+    <div className={s.archDecor} aria-hidden="true">
+      <svg viewBox="0 0 1200 280" fill="none" preserveAspectRatio="xMidYMax meet" className={s.archDecorSvg}>
+        {[0, 1, 2, 3, 4].map((i) => {
+          const cx = 120 + i * 240;
+          return (
+            <g key={i}>
+              <path d={`M${cx - 105} 280V100C${cx - 105} 42 ${cx - 58} -16 ${cx} -16S${cx + 105} 42 ${cx + 105} 100V280`} stroke="rgba(176,141,69,0.18)" strokeWidth="1.2" />
+              <path d={`M${cx - 75} 280V110C${cx - 75} 68 ${cx - 42} 26 ${cx} 26S${cx + 75} 68 ${cx + 75} 110V280`} stroke="rgba(176,141,69,0.10)" strokeWidth="1" />
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
 /* ── Check icon ── */
 function CheckIcon() {
   return (
@@ -554,12 +583,13 @@ export default function MemorandumPage() {
           <div className={`${s.officeGrid} ${s.stagger} ${r4.visible ? s.revealed : ""}`}>
             {C.offices.map((o) => (
               <div key={o.city} className={s.officeCard}>
-                <LogoSvg size={24} />
+                <ArchIcon size={32} />
                 <h4>{o.city}</h4>
                 <p>{o.desc}</p>
               </div>
             ))}
           </div>
+          <ArchDecor />
         </div>
       </section>
 
