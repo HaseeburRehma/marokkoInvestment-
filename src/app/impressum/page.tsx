@@ -18,18 +18,20 @@ export default function Impressum() {
         </Link>
 
         <h1 className="font-[family-name:var(--font-cormorant)] text-3xl md:text-4xl font-medium
-          text-[#f5ede0] mb-10">
+          text-[#f5ede0] mb-4">
           Impressum
         </h1>
+
+        <p className="text-sm text-[#e6be8c]/70 mb-10 font-[family-name:var(--font-inter)]">
+          Marokko Investment befindet sich derzeit in Gründung (i.&nbsp;G.).
+        </p>
 
         <div className="space-y-8 text-sm text-white/50 leading-relaxed font-[family-name:var(--font-inter)]">
           <section>
             <h2 className="text-white/70 font-medium mb-2">Angaben gemäß § 5 TMG</h2>
             <p>
-              Marokko Investment<br />
-              [Vollständiger Name / Firma eintragen]<br />
-              [Straße und Hausnummer]<br />
-              [PLZ Ort]<br />
+              Marokko Investment (in Gründung)<br />
+              Jawad Malloul<br />
               Deutschland
             </p>
           </section>
@@ -43,10 +45,7 @@ export default function Impressum() {
 
           <section>
             <h2 className="text-white/70 font-medium mb-2">Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
-            <p>
-              [Name eintragen]<br />
-              [Anschrift eintragen]
-            </p>
+            <p>Jawad Malloul</p>
           </section>
 
           <section>
@@ -62,6 +61,16 @@ export default function Impressum() {
             <p>
               Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten
               unterliegen dem deutschen Urheberrecht.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-white/70 font-medium mb-2">Hinweis zu Finanzinhalten</h2>
+            <p>
+              Diese Website dient ausschließlich der allgemeinen Information und stellt kein öffentliches
+              Angebot, keine Aufforderung zum Erwerb von Finanz- oder Vermögensanlagen und keine Anlage-,
+              Rechts- oder Steuerberatung dar. Investitionen sind mit Risiken bis hin zum Totalverlust
+              des eingesetzten Kapitals verbunden.
             </p>
           </section>
         </div>
