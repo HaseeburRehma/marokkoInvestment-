@@ -64,6 +64,7 @@ const C = {
   grundsaetze: [
     { num: "01", label: "Zugang", title: "Wir sind vor Ort.", text: "Ein Büro in Casablanca, Partner bei Behörden und Entwicklern. Wir sehen Projekte, bevor sie ausgeschrieben werden — und können prüfen, wer tatsächlich dahintersteht.", img: "/images/office-casablanca.jpg" },
     { num: "02", label: "Klarheit", title: "Wir sagen auch, was nicht geht.", text: "Jede Analyse benennt die Risiken so deutlich wie die Chancen. Wer nur gute Nachrichten hören möchte, ist bei uns falsch. Genau deshalb arbeiten Investoren mit uns.", img: "/images/port-logistics.jpg" },
+
     { num: "03", label: "Beteiligung", title: "Wir investieren mit.", text: "Wir begleiten Projekte nicht nur — wir halten selbst Anteile in Energie und Infrastruktur. Unser eigenes Kapital liegt neben Ihrem, mit demselben Risiko.", img: "/images/solar-farm.jpg" },
   ],
   ablaufSteps: [
@@ -456,7 +457,7 @@ export default function MemorandumPage() {
             <h2 className={s.secTitle}>So erhalten Sie das Dokument.</h2>
             <p className={s.secSub}>Drei Angaben, eine kurze Bestätigung per SMS — und das Dokument ist unterwegs. Wir prüfen jede Anfrage persönlich.</p>
             <div className={s.pdfCard}>
-              <div className={s.pdfIcon}><LogoSvg size={36} /></div>
+              <div className={s.pdfIcon}><ArchIcon size={36} /></div>
               <div>
                 <strong>{C.pdfTitle}</strong>
                 <p className={s.pdfMeta}>{C.pdfMeta}</p>

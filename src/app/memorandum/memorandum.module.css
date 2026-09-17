@@ -97,10 +97,9 @@
 }
 .pill {
   display: inline-block;
-  font-family: var(--font-jetbrains), monospace;
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
   color: var(--m-gold);
   border: 1px solid var(--m-gold-border);
   border-radius: 99px;
@@ -255,8 +254,8 @@
 
 .badge {
   display: inline-flex; align-items: center; gap: 8px;
-  font-family: var(--font-jetbrains), monospace;
-  font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 0.82rem; letter-spacing: 0.02em;
   color: var(--m-gold);
   border: 1px solid var(--m-gold-border);
   border-radius: 99px; padding: 8px 20px; margin-bottom: 36px;
@@ -379,9 +378,9 @@
 .form { display: flex; flex-direction: column; }
 .honey { position: absolute; opacity: 0; height: 0; width: 0; pointer-events: none; }
 .label {
-  font-family: var(--font-jetbrains), monospace;
-  font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--m-muted); margin-bottom: 8px; margin-top: 16px;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 0.86rem; letter-spacing: 0; font-weight: 600;
+  color: var(--m-text); margin-bottom: 8px; margin-top: 16px;
 }
 .label:first-of-type { margin-top: 0; }
 .input {
@@ -633,8 +632,8 @@
 .tlRight .tlSpacer { order: 1; }
 .tlContent { padding: 0 24px; }
 .tlLabel {
-  font-family: var(--font-jetbrains), monospace;
-  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 0.82rem; letter-spacing: 0.02em;
   color: var(--m-gold); margin-bottom: 12px; display: block;
 }
 .tlContent h3 {
@@ -823,8 +822,8 @@
 }
 .langTagActive { color: var(--m-gold); border-color: var(--m-gold); }
 .footerCol h5 {
-  font-family: var(--font-jetbrains), monospace;
-  font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 0.86rem; letter-spacing: 0; font-weight: 600;
   color: var(--m-faint); margin: 0 0 20px;
 }
 .footerCol a {
