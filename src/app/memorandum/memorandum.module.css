@@ -143,7 +143,12 @@
   font-family: var(--font-cormorant), Georgia, serif;
   font-size: 1.12rem; font-weight: 500;
 }
-.nav { display: flex; gap: 32px; }
+.nav {
+  display: flex; align-items: center; gap: 32px;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 40px;
+  padding: 8px 28px;
+}
 .navLink {
   font-size: 0.84rem;
   color: var(--m-muted);
@@ -186,11 +191,11 @@
 .headerCta {
   display: inline-flex; align-items: center; gap: 6px;
   font-size: 0.78rem; font-weight: 500;
-  color: var(--m-bg); background: var(--m-gold);
-  border: none; border-radius: 8px; padding: 8px 20px;
+  color: var(--m-bg); background: #FFFEFA;
+  border: none; border-radius: 30px; padding: 10px 24px;
   cursor: pointer; transition: background 0.25s, transform 0.2s;
 }
-.headerCta:hover { background: var(--m-gold-h); transform: translateY(-1px); }
+.headerCta:hover { background: #f0ebe3; transform: translateY(-1px); }
 
 .burger {
   display: none; flex-direction: column; gap: 5px;
@@ -277,17 +282,28 @@
   color: var(--m-muted);
   max-width: 600px; margin: 0 auto 44px;
 }
+.heroCta {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 0.95rem; font-weight: 500;
+  color: var(--m-bg); background: #FFFEFA;
+  border: none; border-radius: 30px;
+  padding: 16px 36px; cursor: pointer;
+  transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+  box-shadow: 0 0 30px rgba(255, 254, 250, 0.1);
+}
+.heroCta:hover { background: #f0ebe3; transform: translateY(-2px); box-shadow: 0 0 50px rgba(255, 254, 250, 0.15); }
 .goldBtn {
   display: inline-flex; align-items: center; gap: 8px;
   font-size: 0.95rem; font-weight: 500;
   color: var(--m-bg); background: var(--m-gold);
-  border: none; border-radius: 10px;
+  border: none; border-radius: 15px;
   padding: 16px 36px; cursor: pointer;
   transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
   box-shadow: 0 0 30px rgba(176, 141, 69, 0.15);
 }
 .goldBtn:hover { background: var(--m-gold-h); transform: translateY(-2px); box-shadow: 0 0 50px rgba(176, 141, 69, 0.25); }
 .arrow { transition: transform 0.25s; }
+.heroCta:hover .arrow,
 .goldBtn:hover .arrow,
 .goldBtnFull:hover .arrow,
 .headerCta:hover .arrow { transform: translateX(4px); }

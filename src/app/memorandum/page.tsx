@@ -413,7 +413,7 @@ export default function MemorandumPage() {
           <span className={s.badge}><span className={s.pulse} />{C.eyebrow}</span>
           <h1 className={s.heroH1}>{C.headline}</h1>
           <p className={s.heroSub}>{C.sub}</p>
-          <button className={s.goldBtn} onClick={scrollToForm}>{C.cta} <Arrow /></button>
+          <button className={s.heroCta} onClick={scrollToForm}>{C.cta} <Arrow /></button>
         </div>
         <div className={s.scrollHint}>
           <svg width="16" height="24" viewBox="0 0 16 24" fill="none"><rect x="1" y="1" width="14" height="22" rx="7" stroke="rgba(176,141,69,0.4)" strokeWidth="1.5" /><circle cx="8" cy="8" r="2" fill="#B08D45" className={s.scrollDot} /></svg>
