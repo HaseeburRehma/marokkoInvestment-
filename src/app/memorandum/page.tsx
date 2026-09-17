@@ -382,7 +382,7 @@ export default function MemorandumPage() {
           </nav>
           <div className={s.headerRight}>
             <div className={s.langWrap}>
-              <button className={s.langBtn} onClick={(e) => { e.stopPropagation(); setLangOpen(!langOpen); }}>{lang} <ChevronDown /></button>
+              <button className={s.langBtn} onClick={(e) => { e.stopPropagation(); setLangOpen(!langOpen); }}>{LANGS.find(l => l.code === lang)?.label ?? lang} <ChevronDown /></button>
               {langOpen && (
                 <div className={s.langDrop}>
                   {LANGS.map((l) => (
@@ -499,6 +499,7 @@ export default function MemorandumPage() {
             <h2 className={s.secTitle}>{C.sektorenTitle}</h2>
             <p className={s.secSub}>{C.sektorenSub}</p>
           </div>
+
           <div className={s.imgGrid}>
             <div className={s.imgLg}><img src="/images/solar-farm.jpg" alt="Solarthermie im Süden Marokkos" /><span className={s.imgLabel}><span className={s.dot} /> Solarthermie im Süden Marokkos</span></div>
             <div className={s.imgStack}>
@@ -592,7 +593,7 @@ export default function MemorandumPage() {
         <div ref={r6.ref} className={`${s.reveal} ${r6.cls}`}>
           <div className={s.ablaufHeader}>
             <h2 className={s.secTitle}>In drei Schritten zum Dokument.</h2>
-            <p className={s.secSubCenter}>Die Verifizierung hält die Liste sauber. Wir senden das Dokument ausschließlich an bestätigte Kontakte.</p>
+            <p className={s.secSub}>Die Verifizierung hält die Liste sauber. Wir senden das Dokument ausschließlich an bestätigte Kontakte.</p>
           </div>
           <div className={`${s.stepsGrid} ${s.stagger} ${r6.visible ? s.revealed : ""}`}>
             {C.ablaufSteps.map((step) => (
@@ -683,6 +684,7 @@ export default function MemorandumPage() {
               <h5>Rechtliches</h5>
               <a href="/impressum">Impressum</a>
               <a href="/datenschutz">Datenschutzerklärung</a>
+              <a href="/datenschutz#cookies">Cookie-Einstellungen</a>
             </div>
           </div>
           <div className={s.footerBar}>

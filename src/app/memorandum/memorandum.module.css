@@ -436,7 +436,7 @@
   border-bottom: 1px solid var(--m-gold-border);
 }
 .stripItem {
-  text-align: center;
+  text-align: left;
   padding: 12px 16px;
 }
 .stripItem + .stripItem { border-left: 1px solid var(--m-gold-border); }
@@ -455,7 +455,11 @@
    SEKTOREN
    ═══════════════════════════════════ */
 .sektoren { padding: var(--m-py) 32px; background: var(--m-bg); }
-.secHeader { max-width: var(--m-max); margin: 0 auto 48px; }
+.secHeader {
+  max-width: var(--m-max); margin: 0 auto 48px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start;
+}
+.secHeader .secSub { margin-top: 0; }
 
 .imgGrid {
   max-width: var(--m-max); margin: 0 auto 48px;
@@ -652,7 +656,11 @@
    ABLAUF
    ═══════════════════════════════════ */
 .ablauf { padding: var(--m-py) 32px; background: var(--m-bg); }
-.ablaufHeader { max-width: var(--m-max); margin: 0 auto 48px; text-align: center; }
+.ablaufHeader {
+  max-width: var(--m-max); margin: 0 auto 48px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start;
+}
+.ablaufHeader .secSub { margin-top: 0; }
 .stepsGrid {
   max-width: var(--m-max); margin: 0 auto;
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
@@ -667,7 +675,12 @@
 .stepNum {
   font-family: var(--font-jetbrains), monospace;
   font-size: 0.7rem; letter-spacing: 0.1em;
-  color: var(--m-gold); display: block; margin-bottom: 16px;
+  color: var(--m-gold);
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px;
+  border: 1px solid var(--m-gold);
+  border-radius: 50%;
+  margin-bottom: 20px;
 }
 .stepCard h4 {
   font-family: var(--font-cormorant), Georgia, serif;
@@ -713,13 +726,10 @@
   cursor: pointer; text-align: left;
 }
 .faqToggle {
-  width: 28px; height: 28px; border-radius: 50%;
-  border: 1px solid var(--m-gold-border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem; color: var(--m-gold); flex-shrink: 0;
-  transition: background 0.25s;
+  font-size: 1.3rem; color: var(--m-muted); flex-shrink: 0;
+  transition: color 0.25s;
 }
-.faqOpen .faqToggle { background: var(--m-gold-dim); }
+.faqOpen .faqToggle { color: var(--m-gold); }
 .faqA {
   overflow: hidden;
   transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
@@ -805,6 +815,8 @@
   .anfrageGrid { grid-template-columns: 1fr; gap: 48px; }
   .closingInner { grid-template-columns: 1fr; gap: 24px; }
   .closingImgL, .closingImgR { display: none; }
+  .secHeader { grid-template-columns: 1fr; }
+  .ablaufHeader { grid-template-columns: 1fr; }
   .sektorCards { grid-template-columns: repeat(2, 1fr); }
   .footerGrid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
   .vHero { grid-template-columns: 1fr; }
