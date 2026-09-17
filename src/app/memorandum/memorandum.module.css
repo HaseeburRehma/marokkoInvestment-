@@ -26,21 +26,25 @@
   transform: translateY(36px);
   transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
+.revealLeft {
+  opacity: 0;
+  transform: translateX(-48px);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.revealRight {
+  opacity: 0;
+  transform: translateX(48px);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.revealScale {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* MUST come after all variants so it wins the cascade */
 .revealed {
   opacity: 1;
   transform: translateY(0) translateX(0) scale(1);
-}
-.revealLeft {
-  composes: reveal;
-  transform: translateX(-48px) translateY(0);
-}
-.revealRight {
-  composes: reveal;
-  transform: translateX(48px) translateY(0);
-}
-.revealScale {
-  composes: reveal;
-  transform: scale(0.92) translateY(0);
 }
 
 /* Stagger children */
@@ -424,15 +428,26 @@
    CREDENTIALS STRIP
    ═══════════════════════════════════ */
 .strip {
-  display: flex; justify-content: center; gap: 48px;
-  padding: 32px;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  max-width: var(--m-max); margin: 0 auto;
+  padding: 40px 32px;
   background: var(--m-card);
   border-top: 1px solid var(--m-gold-border);
   border-bottom: 1px solid var(--m-gold-border);
 }
 .stripItem {
-  font-family: var(--font-jetbrains), monospace;
-  font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+  text-align: center;
+  padding: 12px 16px;
+}
+.stripItem + .stripItem { border-left: 1px solid var(--m-gold-border); }
+.stripTitle {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: 1.05rem; font-weight: 500;
+  color: var(--m-text);
+  margin-bottom: 4px;
+}
+.stripSub {
+  font-size: 0.78rem;
   color: var(--m-muted);
 }
 
@@ -832,7 +847,9 @@
   .tlRight .tlSpacer { order: unset; }
   .tlContent { padding: 0 0 0 16px; }
 
-  .strip { gap: 20px; flex-wrap: wrap; }
+  .strip { grid-template-columns: repeat(2, 1fr); }
+  .stripItem + .stripItem { border-left: none; }
+  .stripItem:nth-child(n+3) { border-top: 1px solid var(--m-gold-border); }
   .formCard { padding: 28px 20px; }
   .closingBtns { flex-direction: column; align-items: center; }
   .closingChecks { flex-direction: column; align-items: center; gap: 12px; }

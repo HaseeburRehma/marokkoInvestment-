@@ -479,8 +479,16 @@ export default function MemorandumPage() {
 
       {/* ═══ 3 · CREDENTIALS STRIP ═══ */}
       <div className={s.strip}>
-        {["Energie", "Infrastruktur", "Immobilien", "Logistik"].map((c) => (
-          <span key={c} className={s.stripItem}>{c}</span>
+        {[
+          { title: "Casablanca & Düsseldorf", sub: "Büros mit direktem Zugang" },
+          { title: "ab 100.000 €", sub: "Typische Ticketgröße" },
+          { title: "Energie & Infrastruktur", sub: "Unsere Fokussektoren" },
+          { title: "DE · FR · AR · EN", sub: "Dokument in vier Sprachen" },
+        ].map((c) => (
+          <div key={c.title} className={s.stripItem}>
+            <div className={s.stripTitle}>{c.title}</div>
+            <div className={s.stripSub}>{c.sub}</div>
+          </div>
         ))}
       </div>
 
