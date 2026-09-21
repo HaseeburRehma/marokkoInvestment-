@@ -235,6 +235,27 @@ export default function MemorandumPage() {
 
   useEffect(() => { requestAnimationFrame(() => setMounted(true)); }, []);
 
+  /* Init language from ?lang= URL param */
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search).get("lang");
+    const found = LANGS.find((l) => l.code.toLowerCase() === (p ?? "").toLowerCase());
+    if (found) setLang(found.code);
+  }, []);
+
+  /* Keep <html> lang/dir and the URL in sync with the selected language */
+  useEffect(() => {
+    document.documentElement.lang = lang.toLowerCase();
+    document.documentElement.dir = lang === "AR" ? "rtl" : "ltr";
+  }, [lang]);
+
+  const changeLang = useCallback((code: Lang) => {
+    setLang(code);
+    setLangOpen(false);
+    const url = new URL(window.location.href);
+    url.searchParams.set("lang", code.toLowerCase());
+    window.history.replaceState(null, "", url);
+  }, []);
+
   const scrollToForm = useCallback(() => {
     formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, []);
@@ -355,7 +376,7 @@ export default function MemorandumPage() {
               {langOpen && (
                 <div className={s.langDrop}>
                   {LANGS.map((l) => (
-                    <button key={l.code} className={`${s.langOpt} ${lang === l.code ? s.langOptActive : ""}`} onClick={() => { setLang(l.code); setLangOpen(false); }}>
+                    <button key={l.code} className={`${s.langOpt} ${lang === l.code ? s.langOptActive : ""}`} onClick={() => changeLang(l.code)}>
                       {l.label}
                     </button>
                   ))}
@@ -371,7 +392,7 @@ export default function MemorandumPage() {
             {t.nav.map((label, i) => <a key={NAV_HREFS[i]} href={NAV_HREFS[i]} className={s.mobNavLink} onClick={() => setMobileNav(false)}>{label}</a>)}
             <div className={s.mobLangs}>
               {LANGS.map((l) => (
-                <button key={l.code} className={`${s.mobLang} ${lang === l.code ? s.mobLangActive : ""}`} onClick={() => setLang(l.code)}>{l.label}</button>
+                <button key={l.code} className={`${s.mobLang} ${lang === l.code ? s.mobLangActive : ""}`} onClick={() => { changeLang(l.code); setMobileNav(false); }}>{l.label}</button>
               ))}
             </div>
             <button className={s.headerCta} onClick={() => { setMobileNav(false); scrollToForm(); }}>{t.cta} <Arrow /></button>
@@ -643,7 +664,7 @@ export default function MemorandumPage() {
               <p className={s.footerDesc}>{t.footerDesc}</p>
               <div className={s.langTags}>
                 {LANGS.map((l) => (
-                  <button key={l.code} className={`${s.langTagFoot} ${lang === l.code ? s.langTagActive : ""}`} onClick={() => setLang(l.code)}>{l.label}</button>
+                  <button key={l.code} className={`${s.langTagFoot} ${lang === l.code ? s.langTagActive : ""}`} onClick={() => changeLang(l.code)}>{l.label}</button>
                 ))}
               </div>
             </div>
