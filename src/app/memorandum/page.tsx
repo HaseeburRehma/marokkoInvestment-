@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import s from "./memorandum.module.css";
+import { TRANSLATIONS, LANGS, type Lang } from "./i18n";
 
 /* ── Scroll-triggered reveal hook ── */
 type RevealDir = "up" | "left" | "right" | "scale";
@@ -22,76 +23,18 @@ function useReveal(threshold = 0.15, dir: RevealDir = "up") {
   return { ref, cls: visible ? `${base} ${s.revealed}` : base, visible };
 }
 
-/* ── Content ── */
-const C = {
-  eyebrow: "Nur für qualifizierte Investoren",
-  headline: "Marokko 2026.\nDas vertrauliche\nInvestoren-Memorandum.",
-  sub: "Wohin institutionelles Kapital jetzt fließt — und wie qualifizierte Privatinvestoren Zugang bekommen. Ein vertrauliches Dokument für einen kleinen Kreis.",
-  cta: "Memorandum anfordern",
-  formTitle: "Dokument anfordern",
-  formSub: "Wir versenden das Memorandum erst nach Bestätigung Ihrer Telefonnummer.",
-  pdfTitle: "Das vertrauliche Memorandum",
-  pdfMeta: "PDF · 28 Seiten · Stand 2026 · Vertraulich",
-  benefits: [
-    "Kostenfrei und ohne Folgeverpflichtung",
-    "Vertrauliche Behandlung Ihrer Angaben",
-    "Antwort von uns innerhalb von 24 Stunden",
-  ],
-  sektorenTitle: "Wohin das Kapital fließt.",
-  sektorenSub: "Energie, Infrastruktur, Logistik. Marokko legt gerade die Grundlagen für das nächste Jahrzehnt — und internationales Kapital ist längst vor Ort.",
-  sektoren: [
-    { name: "Energie", desc: "Solar, Wind und Netzausbau im industriellen Maßstab" },
-    { name: "Infrastruktur", desc: "Häfen, Straßen und Schienen für den Export nach Europa" },
-    { name: "Immobilien", desc: "Gewerbe und Wohnraum in wachsenden Ballungsräumen" },
-    { name: "Logistik", desc: "Die kurze Verbindung zwischen Afrika und der EU" },
-  ],
-  inhaltTitle: "Was in dem Dokument steht.",
-  inhaltSub: "Kein Verkaufsprospekt. Eine nüchterne Einordnung dessen, was in Marokko gerade passiert — und wo qualifizierte Privatinvestoren anschlussfähig sind.",
-  inhaltItems: [
-    "Welche Sektoren in Marokko das größte Wachstum zeigen",
-    "Wohin internationales und institutionelles Kapital fließt",
-    "Wie der rechtliche Rahmen für ausländische Investoren aussieht",
-    "Chancen und Risiken, ehrlich eingeordnet",
-    "Wie qualifizierte Privatinvestoren Zugang bekommen",
-  ],
-  vertrauenTitle: "Wir bewegen uns in beiden Welten.",
-  vertrauenSub: "Hinter Marokko Investment stehen Büros in Casablanca und Düsseldorf — mit direktem Zugang und jahrelanger Erfahrung im Infrastruktur- und Energiesektor Marokkos.",
-  offices: [
-    { city: "Casablanca", desc: "Deal-Zugang, Behörden und Partner vor Ort. Wir sehen Projekte, bevor sie ausgeschrieben werden." },
-    { city: "Düsseldorf", desc: "Ansprechpartner für Investoren im deutschsprachigen Raum. Deutsche Standards, deutsche Verträge." },
-    { city: "Seit 2016", desc: "Eigene Projekte in Energie und Infrastruktur. Wir investieren mit — nicht nur nebenher." },
-  ],
-  grundsaetze: [
-    { num: "01", label: "Zugang", title: "Wir sind vor Ort.", text: "Ein Büro in Casablanca, Partner bei Behörden und Entwicklern. Wir sehen Projekte, bevor sie ausgeschrieben werden — und können prüfen, wer tatsächlich dahintersteht.", img: "/images/office-casablanca.jpg" },
-    { num: "02", label: "Klarheit", title: "Wir sagen auch, was nicht geht.", text: "Jede Analyse benennt die Risiken so deutlich wie die Chancen. Wer nur gute Nachrichten hören möchte, ist bei uns falsch. Genau deshalb arbeiten Investoren mit uns.", img: "/images/port-logistics.jpg" },
-
-    { num: "03", label: "Beteiligung", title: "Wir investieren mit.", text: "Wir begleiten Projekte nicht nur — wir halten selbst Anteile in Energie und Infrastruktur. Unser eigenes Kapital liegt neben Ihrem, mit demselben Risiko.", img: "/images/solar-farm.jpg" },
-  ],
-  ablaufSteps: [
-    { num: "01", title: "Anfrage", text: "Name, E-Mail und Telefonnummer eintragen. Das dauert weniger als eine Minute." },
-    { num: "02", title: "Verifizierung", text: "Sie erhalten einen sechsstelligen Code per SMS und bestätigen damit Ihre Nummer." },
-    { num: "03", title: "Zustellung", text: "Das Memorandum kommt direkt per E-Mail. Auf Wunsch folgt ein persönliches Gespräch." },
-  ],
-  faqs: [
-    { q: "Was kostet das Dokument?", a: "Nichts. Wir stellen es qualifizierten Investoren kostenfrei zur Verfügung. Es entstehen keine Folgekosten und kein Abonnement." },
-    { q: "Warum brauchen Sie meine Telefonnummer?", a: "Zur Verifizierung per SMS. So stellen wir sicher, dass nur echte Anfragen durchkommen. Ihre Nummer wird nicht für Werbung verwendet." },
-    { q: "Wer bekommt meine Daten?", a: "Nur das Team von Marokko Investment. Keine Weitergabe an Dritte, kein Weiterverkauf." },
-    { q: "Ab welcher Summe ist ein Investment sinnvoll?", a: "Unsere Projekte richten sich an Investoren mit einem Mindestticket von 100.000 €. Details stehen im Memorandum." },
-    { q: "Ist das eine Anlageberatung?", a: "Nein. Wir vermitteln Zugang zu Informationen und Projekten. Eine individuelle Anlageberatung bieten wir nicht an." },
-    { q: "In welchen Sprachen gibt es das Dokument?", a: "Das Memorandum ist auf Deutsch, Französisch, Arabisch und Englisch verfügbar." },
-    { q: "Was passiert nach der Anfrage?", a: "Sie erhalten das Dokument per E-Mail. Auf Wunsch vereinbaren wir ein persönliches Gespräch." },
-  ],
-  closingTitle: "Sichern Sie sich das vertrauliche Memorandum.",
-  closingSub: "Nur für qualifizierte Investoren. Wir prüfen jede Anfrage persönlich und melden uns innerhalb von 24 Stunden.",
-  closingBenefits: ["Keine Renditeversprechen", "Vertrauliche Behandlung", "Antwort innerhalb von 24 Stunden"],
-};
-
-const NAV = [
-  { label: "Das Dokument", href: "#dokument" },
-  { label: "Ablauf", href: "#ablauf" },
-  { label: "Über uns", href: "#vertrauen" },
-  { label: "Kontakt", href: "#fragen" },
+/* ── Structural constants (not translated) ── */
+const NAV_HREFS = ["#dokument", "#ablauf", "#vertrauen", "#fragen"];
+const GRUND_META = [
+  { num: "01", img: "/images/office-casablanca.jpg" },
+  { num: "02", img: "/images/port-logistics.jpg" },
+  { num: "03", img: "/images/solar-farm.jpg" },
 ];
+const STEP_NUMS = ["01", "02", "03"];
+const FOOTER_DOC_HREFS = ["/memorandum", "/dealflow", "/due-diligence", "/family-office", "/thesis"];
+const FOOTER_CONTACT_HREFS = ["#", "#", "mailto:kontakt@marokkoinvestment.de"];
+const FOOTER_LEGAL_HREFS = ["/impressum", "/datenschutz", "/datenschutz#cookies"];
+const PDF_TAGS = ["DE", "FR", "AR", "EN"];
 
 /* ── Gold M logo SVG ── */
 function LogoSvg({ size = 28 }: { size?: number }) {
@@ -265,19 +208,15 @@ function buildSenderEmail(name: string) {
 </div>`.trim();
 }
 
-const LANGS = [
-  { code: "DE", label: "Deutsch" },
-  { code: "FR", label: "Français" },
-  { code: "AR", label: "العربية" },
-  { code: "EN", label: "English" },
-] as const;
-
 export default function MemorandumPage() {
   const [mounted, setMounted] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
-  const [lang, setLang] = useState("DE");
+  const [lang, setLang] = useState<Lang>("DE");
   const [langOpen, setLangOpen] = useState(false);
+
+  const t = TRANSLATIONS[lang];
+  const rtl = lang === "AR";
 
   /* Form */
   const [name, setName] = useState("");
@@ -348,9 +287,9 @@ export default function MemorandumPage() {
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (hp) return;
-    if (!name.trim()) { setErrorMsg("Bitte geben Sie Ihren Namen ein."); setFormStatus("error"); return; }
-    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setErrorMsg("Bitte geben Sie eine gültige E-Mail-Adresse ein."); setFormStatus("error"); return; }
-    if (!consent) { setErrorMsg("Bitte stimmen Sie der Datenschutzerklärung zu."); setFormStatus("error"); return; }
+    if (!name.trim()) { setErrorMsg(t.errName); setFormStatus("error"); return; }
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setErrorMsg(t.errEmail); setFormStatus("error"); return; }
+    if (!consent) { setErrorMsg(t.errConsent); setFormStatus("error"); return; }
 
     setFormStatus("loading");
     setErrorMsg("");
@@ -396,19 +335,19 @@ export default function MemorandumPage() {
       const [res1] = await Promise.all([notif, reply]);
       const data = await res1.json();
       if (data.success) { setFormStatus("success"); setName(""); setEmail(""); setPhone(""); }
-      else { setErrorMsg(data.message ?? "Ein Fehler ist aufgetreten."); setFormStatus("error"); }
-    } catch { setErrorMsg("Verbindungsfehler. Bitte erneut versuchen."); setFormStatus("error"); }
-  }, [name, email, phone, hp, consent]);
+      else { setErrorMsg(data.message ?? t.errGeneric); setFormStatus("error"); }
+    } catch { setErrorMsg(t.errNetwork); setFormStatus("error"); }
+  }, [name, email, phone, hp, consent, t]);
 
   return (
-    <div className={`${s.page} ${mounted ? s.mounted : ""}`}>
+    <div className={`${s.page} ${mounted ? s.mounted : ""} ${rtl ? s.rtl : ""}`} dir={rtl ? "rtl" : "ltr"} lang={lang.toLowerCase()}>
 
       {/* ═══ HEADER ═══ */}
       <header className={s.header}>
         <div className={s.headerInner}>
           <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }} className={s.logo}><LogoSvg /><span>Marokko Investment</span></a>
           <nav className={s.nav}>
-            {NAV.map((l) => <a key={l.href} href={l.href} className={s.navLink}>{l.label}</a>)}
+            {t.nav.map((label, i) => <a key={NAV_HREFS[i]} href={NAV_HREFS[i]} className={s.navLink}>{label}</a>)}
           </nav>
           <div className={s.headerRight}>
             <div className={s.langWrap}>
@@ -423,14 +362,19 @@ export default function MemorandumPage() {
                 </div>
               )}
             </div>
-            <button className={s.headerCta} onClick={scrollToForm}>{C.cta} <Arrow /></button>
+            <button className={s.headerCta} onClick={scrollToForm}>{t.cta} <Arrow /></button>
           </div>
-          <button className={s.burger} onClick={() => setMobileNav(!mobileNav)} aria-label="Menü"><span /><span /><span /></button>
+          <button className={s.burger} onClick={() => setMobileNav(!mobileNav)} aria-label="Menu"><span /><span /><span /></button>
         </div>
         {mobileNav && (
           <div className={s.mobNav}>
-            {NAV.map((l) => <a key={l.href} href={l.href} className={s.mobNavLink} onClick={() => setMobileNav(false)}>{l.label}</a>)}
-            <button className={s.headerCta} onClick={() => { setMobileNav(false); scrollToForm(); }}>{C.cta} <Arrow /></button>
+            {t.nav.map((label, i) => <a key={NAV_HREFS[i]} href={NAV_HREFS[i]} className={s.mobNavLink} onClick={() => setMobileNav(false)}>{label}</a>)}
+            <div className={s.mobLangs}>
+              {LANGS.map((l) => (
+                <button key={l.code} className={`${s.mobLang} ${lang === l.code ? s.mobLangActive : ""}`} onClick={() => setLang(l.code)}>{l.label}</button>
+              ))}
+            </div>
+            <button className={s.headerCta} onClick={() => { setMobileNav(false); scrollToForm(); }}>{t.cta} <Arrow /></button>
           </div>
         )}
       </header>
@@ -440,10 +384,10 @@ export default function MemorandumPage() {
         <img src="/images/hero-moroccan-arch.jpg" alt="" className={s.heroBg} />
         <div className={s.heroOverlay} />
         <div className={`${s.heroContent} ${mounted ? s.heroIn : ""}`}>
-          <span className={s.badge}><span className={s.pulse} />{C.eyebrow}</span>
-          <h1 className={s.heroH1}>{C.headline}</h1>
-          <p className={s.heroSub}>{C.sub}</p>
-          <button className={s.heroCta} onClick={scrollToForm}>{C.cta} <Arrow /></button>
+          <span className={s.badge}><span className={s.pulse} />{t.eyebrow}</span>
+          <h1 className={s.heroH1}>{t.headline}</h1>
+          <p className={s.heroSub}>{t.sub}</p>
+          <button className={s.heroCta} onClick={scrollToForm}>{t.cta} <Arrow /></button>
         </div>
         <div className={s.scrollHint}>
           <svg width="16" height="24" viewBox="0 0 16 24" fill="none"><rect x="1" y="1" width="14" height="22" rx="7" stroke="rgba(176,141,69,0.4)" strokeWidth="1.5" /><circle cx="8" cy="8" r="2" fill="#B08D45" className={s.scrollDot} /></svg>
@@ -454,18 +398,18 @@ export default function MemorandumPage() {
       <section className={s.anfrage} id="dokument" ref={formRef}>
         <div ref={r1.ref} className={`${s.anfrageGrid} ${s.reveal} ${r1.cls}`}>
           <div className={s.anfrageInfo}>
-            <h2 className={s.secTitle}>So erhalten Sie das Dokument.</h2>
-            <p className={s.secSub}>Drei Angaben, eine kurze Bestätigung per SMS — und das Dokument ist unterwegs. Wir prüfen jede Anfrage persönlich.</p>
+            <h2 className={s.secTitle}>{t.anfrageTitle}</h2>
+            <p className={s.secSub}>{t.anfrageSub}</p>
             <div className={s.pdfCard}>
               <div className={s.pdfIcon}><ArchIcon size={36} /></div>
               <div>
-                <strong>{C.pdfTitle}</strong>
-                <p className={s.pdfMeta}>{C.pdfMeta}</p>
-                <div className={s.langTags}>{["DE", "FR", "AR", "EN"].map((l) => <span key={l} className={s.langTag}>{l}</span>)}</div>
+                <strong>{t.pdfTitle}</strong>
+                <p className={s.pdfMeta}>{t.pdfMeta}</p>
+                <div className={s.langTags}>{PDF_TAGS.map((l) => <span key={l} className={s.langTag}>{l}</span>)}</div>
               </div>
             </div>
             <ul className={s.checks}>
-              {C.benefits.map((b) => <li key={b}><CheckIcon /><span>{b}</span></li>)}
+              {t.benefits.map((b) => <li key={b}><CheckIcon /><span>{b}</span></li>)}
             </ul>
           </div>
 
@@ -473,33 +417,33 @@ export default function MemorandumPage() {
             {formStatus === "success" ? (
               <div className={s.formOk}>
                 <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="24" fill="#B08D45" opacity="0.12" /><path d="M14 24l7 7 13-13" stroke="#B08D45" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                <h3>Anfrage erhalten</h3>
-                <p>Wir prüfen Ihre Angaben und melden uns innerhalb von 24 Stunden bei Ihnen.</p>
+                <h3>{t.successTitle}</h3>
+                <p>{t.successText}</p>
               </div>
             ) : (
               <>
-                <h3 className={s.formTitle}>{C.formTitle}</h3>
-                <p className={s.formSub}>{C.formSub}</p>
+                <h3 className={s.formTitle}>{t.formTitle}</h3>
+                <p className={s.formSub}>{t.formSub}</p>
                 <form onSubmit={handleSubmit} className={s.form}>
                   <input type="text" name="_honey" value={hp} onChange={(e) => setHp(e.target.value)} className={s.honey} tabIndex={-1} autoComplete="off" />
-                  <label className={s.label}>Name</label>
-                  <input type="text" placeholder="Vor- und Nachname" value={name} onChange={(e) => setName(e.target.value)} className={s.input} />
-                  <label className={s.label}>E-Mail</label>
-                  <input type="email" placeholder="name@unternehmen.de" value={email} onChange={(e) => setEmail(e.target.value)} className={s.input} />
-                  <label className={s.label}>Telefonnummer</label>
-                  <div className={s.phoneRow}>
+                  <label className={s.label}>{t.labelName}</label>
+                  <input type="text" placeholder={t.phName} value={name} onChange={(e) => setName(e.target.value)} className={s.input} />
+                  <label className={s.label}>{t.labelEmail}</label>
+                  <input type="email" placeholder={t.phEmail} value={email} onChange={(e) => setEmail(e.target.value)} className={s.input} dir="ltr" />
+                  <label className={s.label}>{t.labelPhone}</label>
+                  <div className={s.phoneRow} dir="ltr">
                     <span className={s.phonePrefix}>+49</span>
-                    <input type="tel" placeholder="151 2345678" value={phone} onChange={(e) => setPhone(e.target.value)} className={s.phoneInput} />
+                    <input type="tel" placeholder={t.phPhone} value={phone} onChange={(e) => setPhone(e.target.value)} className={s.phoneInput} />
                   </div>
                   <label className={s.consent}>
                     <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className={s.cb} />
-                    <span>Ich stimme der Verarbeitung meiner Daten gemäß der <a href="/datenschutz" target="_blank">Datenschutzerklärung</a> zu.</span>
+                    <span>{t.consentPre}<a href="/datenschutz" target="_blank">{t.consentLink}</a>{t.consentPost}</span>
                   </label>
                   {formStatus === "error" && <p className={s.err}>{errorMsg}</p>}
                   <button type="submit" className={s.goldBtnFull} disabled={formStatus === "loading"}>
-                    {formStatus === "loading" ? "Wird gesendet…" : <>{C.cta} <Arrow /></>}
+                    {formStatus === "loading" ? t.submitting : <>{t.cta} <Arrow /></>}
                   </button>
-                  <p className={s.lockNote}><LockIcon /> SMS-Verifizierung · Keine Weitergabe an Dritte</p>
+                  <p className={s.lockNote}><LockIcon /> {t.lockNote}</p>
                 </form>
               </>
             )}
@@ -509,12 +453,7 @@ export default function MemorandumPage() {
 
       {/* ═══ 3 · CREDENTIALS STRIP ═══ */}
       <div className={s.strip}>
-        {[
-          { title: "Casablanca & Düsseldorf", sub: "Büros mit direktem Zugang" },
-          { title: "ab 100.000 €", sub: "Typische Ticketgröße" },
-          { title: "Energie & Infrastruktur", sub: "Unsere Fokussektoren" },
-          { title: "DE · FR · AR · EN", sub: "Dokument in vier Sprachen" },
-        ].map((c) => (
+        {t.strip.map((c) => (
           <div key={c.title} className={s.stripItem}>
             <div className={s.stripTitle}>{c.title}</div>
             <div className={s.stripSub}>{c.sub}</div>
@@ -526,19 +465,19 @@ export default function MemorandumPage() {
       <section className={s.sektoren}>
         <div ref={r2.ref} className={`${s.reveal} ${r2.cls}`}>
           <div className={s.secHeader}>
-            <h2 className={s.secTitle}>{C.sektorenTitle}</h2>
-            <p className={s.secSub}>{C.sektorenSub}</p>
+            <h2 className={s.secTitle}>{t.sektorenTitle}</h2>
+            <p className={s.secSub}>{t.sektorenSub}</p>
           </div>
 
           <div className={s.imgGrid}>
-            <div className={s.imgLg}><img src="/images/solar-farm.jpg" alt="Solarthermie im Süden Marokkos" /><span className={s.imgLabel}><span className={s.dot} /> Solarthermie im Süden Marokkos</span></div>
+            <div className={s.imgLg}><img src="/images/solar-farm.jpg" alt={t.imgLabelSolar} /><span className={s.imgLabel}><span className={s.dot} /> {t.imgLabelSolar}</span></div>
             <div className={s.imgStack}>
-              <div className={s.imgSm}><img src="/images/port-logistics.jpg" alt="Hafen- und Logistikinfrastruktur" /><span className={s.imgLabel}><span className={s.dot} /> Hafen- und Logistikinfrastruktur</span></div>
-              <div className={s.imgSm}><img src="/images/casablanca-skyline.jpg" alt="Casablanca, Finanzplatz Nordafrikas" /><span className={s.imgLabel}><span className={s.dot} /> Casablanca, Finanzplatz Nordafrikas</span></div>
+              <div className={s.imgSm}><img src="/images/port-logistics.jpg" alt={t.imgLabelPort} /><span className={s.imgLabel}><span className={s.dot} /> {t.imgLabelPort}</span></div>
+              <div className={s.imgSm}><img src="/images/casablanca-skyline.jpg" alt={t.imgLabelCasablanca} /><span className={s.imgLabel}><span className={s.dot} /> {t.imgLabelCasablanca}</span></div>
             </div>
           </div>
           <div className={`${s.sektorCards} ${s.stagger} ${r2.visible ? s.revealed : ""}`}>
-            {C.sektoren.map((sk) => (
+            {t.sektoren.map((sk) => (
               <div key={sk.name} className={s.sektorCard}><strong>{sk.name}</strong><p>{sk.desc}</p></div>
             ))}
           </div>
@@ -550,10 +489,10 @@ export default function MemorandumPage() {
         <div ref={r3.ref} className={`${s.inhaltCard} ${s.reveal} ${r3.cls}`}>
           <div className={s.inhaltInner}>
             <div className={s.inhaltLeft}>
-              <h2 className={s.secTitle}>{C.inhaltTitle}</h2>
-              <p className={s.secSub}>{C.inhaltSub}</p>
+              <h2 className={s.secTitle}>{t.inhaltTitle}</h2>
+              <p className={s.secSub}>{t.inhaltSub}</p>
               <ol className={s.inhaltList}>
-                {C.inhaltItems.map((item, i) => (
+                {t.inhaltItems.map((item, i) => (
                   <li key={i}><span className={s.num}>{String(i + 1).padStart(2, "0")}</span><span>{item}</span></li>
                 ))}
               </ol>
@@ -569,10 +508,10 @@ export default function MemorandumPage() {
                       </svg>
                     </div>
                     <div className={s.pdfDivider} />
-                    <p className={s.pdfMockLabel}>Marokko Investment</p>
-                    <h4>Das vertrauliche Investoren-Memorandum</h4>
+                    <p className={s.pdfMockLabel}>{t.pdfMockLabel}</p>
+                    <h4>{t.pdfMockTitle}</h4>
                   </div>
-                  <div className={s.pdfMockFoot}><span>28 Seiten</span><span>PDF</span><span>Stand 2026</span></div>
+                  <div className={s.pdfMockFoot}><span>{t.pdfFootPages}</span><span>{t.pdfFootPdf}</span><span>{t.pdfFootDate}</span></div>
                 </div>
               </div>
             </div>
@@ -586,13 +525,13 @@ export default function MemorandumPage() {
           <div className={s.vCard}>
             <div className={s.vHero}>
               <div className={s.vText}>
-                <h2 className={s.secTitle}>{C.vertrauenTitle}</h2>
-                <p className={s.vSub}>{C.vertrauenSub}</p>
+                <h2 className={s.secTitle}>{t.vertrauenTitle}</h2>
+                <p className={s.vSub}>{t.vertrauenSub}</p>
               </div>
-              <div className={s.vImg}><img src="/images/office-casablanca.jpg" alt="Büro in Casablanca" /><span className={s.imgLabel}><span className={s.dot} /> Unser Büro in Casablanca</span></div>
+              <div className={s.vImg}><img src="/images/office-casablanca.jpg" alt={t.officeLabel} /><span className={s.imgLabel}><span className={s.dot} /> {t.officeLabel}</span></div>
             </div>
             <div className={`${s.officeGrid} ${s.stagger} ${r4.visible ? s.revealed : ""}`}>
-              {C.offices.map((o) => (
+              {t.offices.map((o) => (
                 <div key={o.city} className={s.officeCard}>
                   <ArchIcon size={32} />
                   <h4>{o.city}</h4>
@@ -609,18 +548,18 @@ export default function MemorandumPage() {
       <section className={s.grund}>
         <div ref={r5.ref} className={`${r5.cls}`}>
           <div className={s.grundHeader}>
-            <span className={s.pill}>Unsere Grundsätze</span>
-            <h2 className={s.secTitle}>Wie wir arbeiten. Und warum das für Sie zählt.</h2>
-            <p className={s.secSubCenter}>Drei Grundsätze bestimmen jede Entscheidung, die wir in Marokko treffen. Sie erklären auch, warum unsere Dokumente so nüchtern geschrieben sind.</p>
+            <span className={s.pill}>{t.grundPill}</span>
+            <h2 className={s.secTitle}>{t.grundTitle}</h2>
+            <p className={s.secSubCenter}>{t.grundSub}</p>
           </div>
           <div className={s.timeline} ref={timelineRef}>
-            {C.grundsaetze.map((g, i) => (
-              <div key={g.num} className={`${s.tlItem} ${i % 2 !== 0 ? s.tlRight : ""}`} data-tl-item>
+            {t.grundsaetze.map((g, i) => (
+              <div key={GRUND_META[i].num} className={`${s.tlItem} ${i % 2 !== 0 ? s.tlRight : ""}`} data-tl-item>
                 <div className={s.tlContent}>
-                  <span className={s.tlLabel}>{g.num} · {g.label}</span>
+                  <span className={s.tlLabel}>{GRUND_META[i].num} · {g.label}</span>
                   <h3>{g.title}</h3>
                   <p>{g.text}</p>
-                  <img src={g.img} alt={g.title} className={s.tlImg} />
+                  <img src={GRUND_META[i].img} alt={g.title} className={s.tlImg} />
                 </div>
                 <div className={s.tlLine} style={{ "--tl-fill": `${Math.min(100, tlProgress * 100 * 3 - i * 100)}%` } as React.CSSProperties}><span className={`${s.tlDot} ${activeDots[i] ? s.tlDotActive : ""}`} /></div>
                 <div className={s.tlSpacer} />
@@ -634,13 +573,13 @@ export default function MemorandumPage() {
       <section className={s.ablauf} id="ablauf">
         <div ref={r6.ref} className={`${s.reveal} ${r6.cls}`}>
           <div className={s.ablaufHeader}>
-            <h2 className={s.secTitle}>In drei Schritten zum Dokument.</h2>
-            <p className={s.secSub}>Die Verifizierung hält die Liste sauber. Wir senden das Dokument ausschließlich an bestätigte Kontakte.</p>
+            <h2 className={s.secTitle}>{t.ablaufTitle}</h2>
+            <p className={s.secSub}>{t.ablaufSub}</p>
           </div>
           <div className={`${s.stepsGrid} ${s.stagger} ${r6.visible ? s.revealed : ""}`}>
-            {C.ablaufSteps.map((step) => (
-              <div key={step.num} className={s.stepCard}>
-                <span className={s.stepNum}>{step.num}</span>
+            {t.ablaufSteps.map((step, i) => (
+              <div key={STEP_NUMS[i]} className={s.stepCard}>
+                <span className={s.stepNum}>{STEP_NUMS[i]}</span>
                 <h4>{step.title}</h4>
                 <p>{step.text}</p>
               </div>
@@ -653,23 +592,23 @@ export default function MemorandumPage() {
       <section className={s.faqSec} id="fragen">
         <div ref={r7.ref} className={`${s.faqGrid} ${s.reveal} ${r7.cls}`}>
           <div className={s.faqLeft}>
-            <span className={s.pill}>Häufige Fragen</span>
-            <h2 className={s.secTitle}>Vorab geklärt.</h2>
-            <p className={s.secSub}>Wir halten es transparent und kurz. Diese Antworten ersparen Ihnen das Nachfragen.</p>
+            <span className={s.pill}>{t.faqPill}</span>
+            <h2 className={s.secTitle}>{t.faqTitle}</h2>
+            <p className={s.secSub}>{t.faqSub}</p>
             <div className={s.faqCta}>
               <div className={s.faqCtaIcon}>
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3" stroke="#B08D45" strokeWidth="1.3" /><path d="M4 17c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#B08D45" strokeWidth="1.3" strokeLinecap="round" /></svg>
               </div>
-              <div><p className={s.faqCtaSm}>Etwas offen geblieben?</p><strong>Sprechen Sie mit uns</strong></div>
+              <div><p className={s.faqCtaSm}>{t.faqCtaSm}</p><strong>{t.faqCtaStrong}</strong></div>
             </div>
           </div>
           <div className={`${s.faqRight} ${s.stagger} ${r7.visible ? s.revealed : ""}`}>
-            {C.faqs.map((f, i) => (
+            {t.faqs.map((f, i) => (
               <div key={i} className={`${s.faqItem} ${openFaq === i ? s.faqOpen : ""}`}>
                 <button className={s.faqQ} onClick={() => setOpenFaq(openFaq === i ? null : i)}>
                   <span>{f.q}</span><span className={s.faqToggle}>{openFaq === i ? "−" : "+"}</span>
                 </button>
-                <div className={s.faqA} style={{ maxHeight: openFaq === i ? 200 : 0 }}><p>{f.a}</p></div>
+                <div className={s.faqA} style={{ maxHeight: openFaq === i ? 240 : 0 }}><p>{f.a}</p></div>
               </div>
             ))}
           </div>
@@ -681,14 +620,14 @@ export default function MemorandumPage() {
         <div ref={r8.ref} className={`${s.closingInner} ${s.reveal} ${r8.cls}`}>
           <div className={s.closingImgL}><img src="/images/moroccan-courtyard.jpg" alt="" /></div>
           <div className={s.closingCenter}>
-            <h2 className={s.secTitle}>{C.closingTitle}</h2>
-            <p className={s.closingSub}>{C.closingSub}</p>
+            <h2 className={s.secTitle}>{t.closingTitle}</h2>
+            <p className={s.closingSub}>{t.closingSub}</p>
             <div className={s.closingBtns}>
-              <button className={s.goldBtn} onClick={scrollToForm}>{C.cta} <Arrow /></button>
-              <button className={s.outlineBtn} onClick={scrollToForm}>Rückfragen stellen</button>
+              <button className={s.goldBtn} onClick={scrollToForm}>{t.cta} <Arrow /></button>
+              <button className={s.outlineBtn} onClick={scrollToForm}>{t.ctaSecondary}</button>
             </div>
             <div className={s.closingChecks}>
-              {C.closingBenefits.map((b) => <span key={b} className={s.closingCheck}><CheckIcon />{b}</span>)}
+              {t.closingBenefits.map((b) => <span key={b} className={s.closingCheck}><CheckIcon />{b}</span>)}
             </div>
           </div>
           <div className={s.closingImgR}><img src="/images/moroccan-door.jpg" alt="" /></div>
@@ -701,37 +640,29 @@ export default function MemorandumPage() {
           <div className={s.footerGrid}>
             <div className={s.footerBrand}>
               <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }} className={s.logo}><LogoSvg size={22} /><span>Marokko Investment</span></a>
-              <p className={s.footerDesc}>Zugang zu Investments in marokkanische Energie- und Infrastrukturprojekte. Büros in Casablanca und Düsseldorf.</p>
+              <p className={s.footerDesc}>{t.footerDesc}</p>
               <div className={s.langTags}>
-                {["Deutsch", "Français", "العربية", "English"].map((l, i) => (
-                  <span key={l} className={`${s.langTagFoot} ${i === 0 ? s.langTagActive : ""}`}>{l}</span>
+                {LANGS.map((l) => (
+                  <button key={l.code} className={`${s.langTagFoot} ${lang === l.code ? s.langTagActive : ""}`} onClick={() => setLang(l.code)}>{l.label}</button>
                 ))}
               </div>
             </div>
             <div className={s.footerCol}>
-              <h5>Dokumente</h5>
-              <a href="/memorandum">Das vertrauliche Memorandum</a>
-              <a href="/dealflow">Der Deal-Flow-Report</a>
-              <a href="/due-diligence">Die Due-Diligence-Analyse</a>
-              <a href="/family-office">Das Family-Office-Briefing</a>
-              <a href="/thesis">Das Thesis Paper</a>
+              <h5>{t.footerDocsH}</h5>
+              {t.footerDocs.map((d, i) => <a key={i} href={FOOTER_DOC_HREFS[i]}>{d}</a>)}
             </div>
             <div className={s.footerCol}>
-              <h5>Kontakt</h5>
-              <a href="#">Casablanca</a>
-              <a href="#">Düsseldorf</a>
-              <a href="mailto:kontakt@marokkoinvestment.de">kontakt@marokkoinvestment.de</a>
+              <h5>{t.footerContactH}</h5>
+              {t.footerContact.map((c, i) => <a key={i} href={FOOTER_CONTACT_HREFS[i]}>{c}</a>)}
             </div>
             <div className={s.footerCol}>
-              <h5>Rechtliches</h5>
-              <a href="/impressum">Impressum</a>
-              <a href="/datenschutz">Datenschutzerklärung</a>
-              <a href="/datenschutz#cookies">Cookie-Einstellungen</a>
+              <h5>{t.footerLegalH}</h5>
+              {t.footerLegal.map((l, i) => <a key={i} href={FOOTER_LEGAL_HREFS[i]}>{l}</a>)}
             </div>
           </div>
           <div className={s.footerBar}>
-            <p>© 2026 Marokko Investment · Ein Projekt von TyloTech</p>
-            <p className={s.disclaimer}>Diese Seite ist weder ein Angebot noch eine Anlageberatung. Sie enthält keine Renditeversprechen. Investitionen in Sachwerte und Projekte können zum Totalverlust des eingesetzten Kapitals führen.</p>
+            <p>{t.footerCopyright}</p>
+            <p className={s.disclaimer}>{t.footerDisclaimer}</p>
           </div>
         </div>
       </footer>
