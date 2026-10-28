@@ -53,6 +53,7 @@ export const metadata: Metadata = {
       "Investiere in das Marokko von morgen. Private Equity — Nur auf Einladung.",
   },
   robots: { index: true, follow: true },
+  verification: { google: "KOZTH7Lcl9qRoXpHAvfm-MxpomM6MQoFFgPE-8VBWRw" },
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },

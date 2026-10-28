@@ -1,10 +1,11 @@
-/* ── Client-side tracking helpers (Meta Pixel + Conversions API + Clarity) ──
+/* ── Client-side tracking helpers (Meta Pixel + Conversions API + Clarity + GTM/GA4) ──
    Nothing fires until the visitor has accepted the cookie banner. */
 
 export const CONSENT_KEY = "mi_consent";
 export const CONSENT_EVENT = "mi-consent";
 export const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || "1126487640138424";
 export const CLARITY_ID = "z4pw3kfntb";
+export const GTM_ID = "GTM-P9JSMVLL";
 
 type Fbq = (...args: unknown[]) => void;
 type Clarity = (...args: unknown[]) => void;
@@ -13,6 +14,7 @@ declare global {
   interface Window {
     fbq?: Fbq;
     clarity?: Clarity;
+    dataLayer?: Record<string, unknown>[];
   }
 }
 
@@ -81,6 +83,12 @@ export function trackMeta(
   }).catch(() => {});
 }
 
+/* GTM forwards these to GA4 (tag "GA4 Event - Lead & Form Start"). */
+export function pushDataLayer(event: string, params: Record<string, unknown> = {}) {
+  if (getConsent() !== "granted") return;
+  (window.dataLayer = window.dataLayer || []).push({ event, ...params });
+}
+
 export function trackClarity(event: string, tags: Record<string, string> = {}) {
   if (getConsent() !== "granted" || !window.clarity) return;
   for (const [k, v] of Object.entries(tags)) window.clarity("set", k, v);
@@ -99,5 +107,6 @@ export function trackLead(
   );
   trackMeta("CompleteRegistration", { content_name: form, status: true }, user);
   trackClarity("lead", { form });
+  pushDataLayer("generate_lead", { form_name: form });
   window.clarity?.("upgrade", "lead");
 }

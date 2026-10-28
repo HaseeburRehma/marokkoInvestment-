@@ -93,6 +93,14 @@ export default function Datenschutz() {
               Conversions API. Eine Übermittlung in die USA ist möglich; Meta ist unter dem
               EU-US Data Privacy Framework zertifiziert.
             </p>
+            <h3 className="text-white/60 text-xs font-medium mb-1 mt-4">Google Analytics 4 &amp; Google Tag Manager</h3>
+            <p>
+              Anbieter: Google Ireland Ltd., Gordon House, Barrow Street, Dublin 4, Irland. Über den
+              Google Tag Manager laden wir Google Analytics 4, um Seitenaufrufe, Scrolltiefe,
+              Klicks und Formular-Anmeldungen statistisch auszuwerten. IP-Adressen werden von
+              Google Analytics 4 nicht gespeichert. Eine Übermittlung in die USA ist möglich;
+              Google ist unter dem EU-US Data Privacy Framework zertifiziert.
+            </p>
             <h3 className="text-white/60 text-xs font-medium mb-1 mt-4">Microsoft Clarity</h3>
             <p>
               Anbieter: Microsoft Ireland Operations Ltd., One Microsoft Place, Dublin 18, Irland.

@@ -5,8 +5,10 @@ import { usePathname } from "next/navigation";
 import {
   CLARITY_ID,
   CONSENT_EVENT,
+  GTM_ID,
   PIXEL_ID,
   getConsent,
+  pushDataLayer,
   setConsent,
   trackClarity,
   trackMeta,
@@ -30,6 +32,16 @@ function loadScripts() {
       y.parentNode!.insertBefore(t, y);
     })(w, document, "clarity", "script", CLARITY_ID);
     window.clarity!("consentv2", { ad_Storage: "granted", analytics_Storage: "granted" });
+  }
+
+  if (!document.getElementById("gtm-script")) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ "gtm.start": Date.now(), event: "gtm.js" });
+    const t = document.createElement("script");
+    t.id = "gtm-script";
+    t.async = true;
+    t.src = "https://www.googletagmanager.com/gtm.js?id=" + GTM_ID;
+    document.head.appendChild(t);
   }
 
   if (PIXEL_ID && !w.fbq) {
@@ -90,6 +102,7 @@ export default function Tracking() {
       fired = true;
       trackMeta("FormStart", { page: pathname ?? "/" }, {}, true);
       trackClarity("form_start");
+      pushDataLayer("form_start");
     };
     document.addEventListener("focusin", onFocus);
     return () => document.removeEventListener("focusin", onFocus);
@@ -123,7 +136,7 @@ export default function Tracking() {
       }}
     >
       <p style={{ margin: 0, color: "rgba(245,237,224,0.8)" }}>
-        Wir nutzen Cookies und ähnliche Technologien (Meta Pixel, Microsoft Clarity), um die
+        Wir nutzen Cookies und ähnliche Technologien (Google Analytics, Meta Pixel, Microsoft Clarity), um die
         Website zu verbessern und unsere Werbung zu messen. Details in der{" "}
         <a href="/datenschutz#cookies" style={{ color: "#e6be8c" }}>
           Datenschutzerklärung
