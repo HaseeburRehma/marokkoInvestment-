@@ -8,7 +8,7 @@ import {
   GTM_ID,
   PIXEL_ID,
   getConsent,
-  pushDataLayer,
+
   setConsent,
   trackClarity,
   trackMeta,
@@ -102,7 +102,6 @@ export default function Tracking() {
       fired = true;
       trackMeta("FormStart", { page: pathname ?? "/" }, {}, true);
       trackClarity("form_start");
-      pushDataLayer("form_start");
     };
     document.addEventListener("focusin", onFocus);
     return () => document.removeEventListener("focusin", onFocus);
