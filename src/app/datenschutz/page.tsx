@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { CookieSettingsButton } from "../Tracking";
 
 export const metadata: Metadata = {
   title: "Datenschutz — Marokko Investment",
@@ -75,8 +76,38 @@ export default function Datenschutz() {
             </p>
           </section>
 
+          <section id="cookies">
+            <h2 className="text-white/70 font-medium mb-2">6. Cookies, Analyse &amp; Marketing</h2>
+            <p>
+              Nur wenn Sie im Cookie-Banner „Alle akzeptieren“ wählen, setzen wir die folgenden
+              Dienste ein. Rechtsgrundlage ist Ihre Einwilligung (Art. 6 Abs. 1 lit. a DSGVO,
+              § 25 Abs. 1 TDDDG). Ohne Einwilligung werden keine dieser Dienste geladen.
+            </p>
+            <h3 className="text-white/60 text-xs font-medium mb-1 mt-4">Meta Pixel &amp; Conversions API</h3>
+            <p>
+              Anbieter: Meta Platforms Ireland Ltd., Merrion Road, Dublin 4, Irland. Wir messen
+              Seitenaufrufe und Formular-Anmeldungen, um die Wirksamkeit unserer Werbung auf
+              Facebook und Instagram auszuwerten. Bei einer Anmeldung übermitteln wir Ihre
+              E-Mail-Adresse, ggf. Name und Telefonnummer in gehashter (verschlüsselter) Form
+              sowie IP-Adresse und Browser-Kennung an Meta, auch serverseitig über die
+              Conversions API. Eine Übermittlung in die USA ist möglich; Meta ist unter dem
+              EU-US Data Privacy Framework zertifiziert.
+            </p>
+            <h3 className="text-white/60 text-xs font-medium mb-1 mt-4">Microsoft Clarity</h3>
+            <p>
+              Anbieter: Microsoft Ireland Operations Ltd., One Microsoft Place, Dublin 18, Irland.
+              Clarity zeichnet Mausbewegungen, Klicks und Scrollverhalten auf (Heatmaps,
+              Sitzungsaufzeichnungen), damit wir die Website verbessern können. Eingaben in
+              Formularfelder werden maskiert.
+            </p>
+            <p className="mt-3">
+              Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen:{" "}
+              <CookieSettingsButton />
+            </p>
+          </section>
+
           <section>
-            <h2 className="text-white/70 font-medium mb-2">6. Google Fonts</h2>
+            <h2 className="text-white/70 font-medium mb-2">7. Google Fonts</h2>
             <p>
               Diese Seite nutzt Google Fonts. Die Google Fonts werden lokal eingebunden
               oder über die Server von Google geladen. Dabei werden Daten an Google

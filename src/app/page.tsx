@@ -2,6 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 import { useState, useEffect, useCallback } from "react";
+import { trackLead } from "@/lib/tracking";
 import s from "./page.module.css";
 
 /* ── Background images — water (Rabat) first ── */
@@ -83,6 +84,7 @@ export default function Home() {
         });
         const data = await res.json();
         if (data.success) {
+          trackLead("Warteliste", { email: email.trim() });
           setStatus("success");
           setEmail("");
         } else {

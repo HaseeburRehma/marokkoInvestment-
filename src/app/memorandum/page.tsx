@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { trackLead } from "@/lib/tracking";
 import s from "./memorandum.module.css";
 import { TRANSLATIONS, LANGS, type Lang } from "./i18n";
 
@@ -355,7 +356,7 @@ export default function MemorandumPage() {
 
       const [res1] = await Promise.all([notif, reply]);
       const data = await res1.json();
-      if (data.success) { setFormStatus("success"); setName(""); setEmail(""); setPhone(""); }
+      if (data.success) { trackLead("Investoren-Memorandum", { email: em, phone: phone.trim(), name: n }); setFormStatus("success"); setName(""); setEmail(""); setPhone(""); }
       else { setErrorMsg(data.message ?? t.errGeneric); setFormStatus("error"); }
     } catch { setErrorMsg(t.errNetwork); setFormStatus("error"); }
   }, [name, email, phone, hp, consent, t]);

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import Tracking from "./Tracking";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -72,6 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <div className="grain" aria-hidden="true" />
         {children}
+        <Tracking />
       </body>
     </html>
   );
