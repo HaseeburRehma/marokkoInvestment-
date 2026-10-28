@@ -18,7 +18,7 @@ const ALLOWED = new Set([
 const sha = (v: string) => createHash("sha256").update(v).digest("hex");
 
 export async function POST(req: NextRequest) {
-  const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+  const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID || "1126487640138424";
   const token = process.env.META_CAPI_TOKEN;
   if (!pixelId || !token) return NextResponse.json({ skipped: true });
 

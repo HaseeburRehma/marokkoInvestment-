@@ -3,7 +3,7 @@
 
 export const CONSENT_KEY = "mi_consent";
 export const CONSENT_EVENT = "mi-consent";
-export const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID ?? "";
+export const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || "1126487640138424";
 export const CLARITY_ID = "z4pw3kfntb";
 
 type Fbq = (...args: unknown[]) => void;
