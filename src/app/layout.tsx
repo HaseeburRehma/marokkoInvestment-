@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Tracking from "./Tracking";
@@ -54,15 +54,10 @@ export const metadata: Metadata = {
   },
   robots: { index: true, follow: true },
   verification: { google: "KOZTH7Lcl9qRoXpHAvfm-MxpomM6MQoFFgPE-8VBWRw" },
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
-      { url: "/icon-512.png", type: "image/png", sizes: "512x512" },
-    ],
-    apple: { url: "/apple-icon.svg", type: "image/svg+xml" },
-  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0C0A07",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
