@@ -80,6 +80,24 @@
 /* ═══════════════════════════════════════════
    CONTENT
    ═══════════════════════════════════════════ */
+.brand {
+  position: absolute;
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  animation: brandIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes brandIn {
+  from { opacity: 0; transform: translate(-50%, -12px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+@media (max-width: 640px) {
+  .brand { top: 24px; }
+  .brand svg { height: 36px; width: auto; }
+}
+
 .content {
   position: relative;
   z-index: 5;

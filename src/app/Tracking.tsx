@@ -8,7 +8,6 @@ import {
   GTM_ID,
   PIXEL_ID,
   getConsent,
-
   setConsent,
   trackClarity,
   trackMeta,
@@ -65,6 +64,16 @@ function loadScripts() {
   }
 }
 
+/* Ad landing pages: each sends ViewContent so campaigns can retarget per page */
+const LANDING_PAGES: Record<string, string> = {
+  "/memorandum": "Investoren-Memorandum",
+  "/dealflow": "Deal-Flow-Report",
+  "/due-diligence": "Due-Diligence-Analyse",
+  "/family-office": "Family-Office-Briefing",
+  "/thesis": "Thesis Paper",
+  "/eignungs-check": "Eignungs-Check",
+};
+
 export default function Tracking() {
   const pathname = usePathname();
   const [consent, setLocal] = useState<"granted" | "denied" | null | "unknown">("unknown");
@@ -87,9 +96,8 @@ export default function Tracking() {
     if (consent !== "granted") return;
     loadScripts();
     trackMeta("PageView");
-    if (pathname?.startsWith("/memorandum")) {
-      trackMeta("ViewContent", { content_name: "Investoren-Memorandum", content_type: "landing_page" });
-    }
+    const landing = LANDING_PAGES[pathname?.replace(/\/$/, "") ?? ""];
+    if (landing) trackMeta("ViewContent", { content_name: landing, content_type: "landing_page" });
     trackClarity("page_view", { page: pathname ?? "/" });
   }, [consent, pathname]);
 

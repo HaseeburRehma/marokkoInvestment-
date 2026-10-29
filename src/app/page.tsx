@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useState, useEffect, useCallback } from "react";
 import { trackLead } from "@/lib/tracking";
+import Logo from "@/components/Logo";
 import s from "./page.module.css";
 
 /* ── Background images — water (Rabat) first ── */
@@ -123,6 +124,10 @@ export default function Home() {
       <div className={s.bgOverlay} />
       <div className={s.dunes} />
       <div className={s.vignette} />
+
+      <div className={s.brand}>
+        <Logo height={44} />
+      </div>
 
       {/* ── Content ── */}
       <div className={s.content}>

@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Exklusiver Zugang zu Private-Equity-Investitionen in Marokko.",
     start_url: "/",
     display: "standalone",
-    background_color: "#0C0A07",
+    background_color: "#001F00",
     theme_color: "#0C0A07",
     icons: [
       { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },

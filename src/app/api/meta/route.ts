@@ -13,6 +13,9 @@ const ALLOWED = new Set([
   "Contact",
   "MemorandumRequested",
   "FormStart",
+  "QuizStart",
+  "QuizStep",
+  "QualifiedLead",
 ]);
 
 const sha = (v: string) => createHash("sha256").update(v).digest("hex");

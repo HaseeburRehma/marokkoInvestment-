@@ -95,18 +95,58 @@ export function trackClarity(event: string, tags: Record<string, string> = {}) {
   window.clarity("event", event);
 }
 
-/* A completed form: Lead on Meta (pixel + CAPI), event + upgrade on Clarity. */
+/* A completed form: Lead on Meta (pixel + CAPI), event + upgrade on Clarity,
+   generate_lead for GA4. `extra` carries form-specific answers. */
 export function trackLead(
   form: string,
   user: { email?: string; phone?: string; name?: string },
+  extra: Record<string, string | number> = {},
 ) {
   trackMeta(
     "Lead",
-    { content_name: form, content_category: "Marokko Investment", currency: "EUR", value: 0 },
+    { content_name: form, content_category: "Marokko Investment", currency: "EUR", value: 0, ...extra },
     user,
   );
   trackMeta("CompleteRegistration", { content_name: form, status: true }, user);
   trackClarity("lead", { form });
-  pushDataLayer("generate_lead", { form_name: form });
+  pushDataLayer("generate_lead", { form_name: form, ...extra });
   window.clarity?.("upgrade", "lead");
+}
+
+/* Funnel steps of a multi-step form (Eignungs-Check). Custom Meta events
+   so ads can optimise on quiz progress, mirrored to GA4 and Clarity. */
+export function trackQuizStep(form: string, step: number, question: string, answer: string) {
+  if (step === 1) {
+    trackMeta("QuizStart", { content_name: form }, {}, true);
+    pushDataLayer("quiz_start", { form_name: form });
+  }
+  trackMeta("QuizStep", { content_name: form, step, question, answer }, {}, true);
+  pushDataLayer("quiz_step", { form_name: form, step, question, answer });
+  trackClarity("quiz_step", { [`quiz_${question}`]: answer });
+}
+
+/* A lead that fits the target profile; worth optimising campaigns on. */
+export function trackQualifiedLead(
+  form: string,
+  user: { email?: string; phone?: string; name?: string },
+  extra: Record<string, string | number> = {},
+) {
+  trackMeta("QualifiedLead", { content_name: form, currency: "EUR", value: 0, ...extra }, user, true);
+  pushDataLayer("qualified_lead", { form_name: form, ...extra });
+  trackClarity("qualified_lead");
+}
+
+/* Campaign attribution (utm_*, fbclid, gclid) read from the landing URL at
+   submit time, so the lead email says which ad brought the visitor. Nothing
+   is stored on the device. */
+const ATTR_PARAMS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid", "gclid"];
+
+export function getAttribution(): Record<string, string> {
+  const q = new URLSearchParams(location.search);
+  const found: Record<string, string> = {};
+  for (const k of ATTR_PARAMS) {
+    const v = q.get(k);
+    if (v) found[k] = v.slice(0, 200);
+  }
+  return found;
 }

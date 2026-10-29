@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import Logo from "@/components/Logo";
 
 export const metadata: Metadata = {
   title: "Impressum — Marokko Investment",
@@ -9,6 +10,10 @@ export default function Impressum() {
   return (
     <main className="min-h-screen bg-[#0a0a0a] py-20 px-6">
       <div className="max-w-[600px] mx-auto">
+        <Link href="/" aria-label="Marokko Investment" className="inline-flex mb-10">
+          <Logo height={40} />
+        </Link>
+        <br />
         <Link
           href="/"
           className="inline-block font-[family-name:var(--font-jetbrains)] text-xs tracking-[0.3em]
