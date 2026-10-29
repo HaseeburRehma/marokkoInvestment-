@@ -113,6 +113,8 @@ export const QUIZ = {
   errPhone: "Bitte geben Sie eine Telefonnummer ein, unter der wir Sie erreichen.",
   errConsent: "Bitte bestätigen Sie die Einwilligung.",
   errNetwork: "Verbindungsfehler. Bitte erneut versuchen.",
+  errRate: "Zu viele Anfragen in kurzer Zeit. Bitte versuchen Sie es in einigen Minuten erneut.",
+  errInvalid: "Bitte prüfen Sie Ihre Angaben.",
   disclaimer: "Unverbindliche Eignungs-Vorprüfung, keine Anlageberatung. Diese Seite stellt keine Anlageberatung und kein öffentliches Angebot dar. Unternehmerische Beteiligungen sind mit Risiken verbunden, bis hin zum Totalverlust des eingesetzten Kapitals.",
 };
 

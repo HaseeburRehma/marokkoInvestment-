@@ -36,12 +36,12 @@ export const metadata: Metadata = {
     "Infrastruktur",
     "Erneuerbare Energien",
   ],
-  metadataBase: new URL("https://marokkoinvestment.de"),
+  metadataBase: new URL("https://www.marokkoinvestment.de"),
   openGraph: {
     title: "Marokko Investment — Investiere in das Marokko von morgen",
     description:
       "Exklusiver Zugang zu Private-Equity-Investitionen in Marokko. Begrenzte Plätze.",
-    url: "https://marokkoinvestment.de",
+    url: "https://www.marokkoinvestment.de",
     siteName: "Marokko Investment",
     locale: "de_DE",
     type: "website",

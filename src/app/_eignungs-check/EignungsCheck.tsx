@@ -3,12 +3,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Logo, { LogoMark } from "@/components/Logo";
-import { getAttribution, pushDataLayer, trackClarity, trackLead, trackQualifiedLead, trackQuizStep } from "@/lib/tracking";
+import { submitLead } from "@/lib/submitLead";
+import { pushDataLayer, trackClarity, trackLead, trackQualifiedLead, trackQuizStep } from "@/lib/tracking";
 import s from "./eignung.module.css";
 import { ABLAUF, CHANCE, CTA, FAQ, FOOTER, HERO, MODELL, NAV, QUESTIONS, QUIZ, SEKTOREN, SICHERHEIT, STATS, SUBSTANZ } from "./content";
 
 const FORM_NAME = "Eignungs-Check";
-const WEB3FORMS_KEY = "241ac8bf-f24f-4a36-b8f4-364360c35415";
 
 /* ── Icons (24px grid, 1.5 stroke, currentColor) ── */
 const ICONS: Record<string, React.ReactNode> = {
@@ -138,41 +138,27 @@ function Quiz() {
     setErr("");
     const fullPhone = ph.startsWith("+") || ph.startsWith("00") ? ph : `+49 ${ph.replace(/^0/, "")}`;
     const [volumen, ziel, erfahrung, zeitpunkt] = answers as string[];
+    const byKey = Object.fromEntries(QUESTIONS.map((q, i) => [q.key, answers[i] as string]));
+
+    const r = await submitLead(
+      { form: "eignungs-check", name: n, email: em, phone: fullPhone, consent, answers: byKey, website: hp },
+      {
+        subject: `Neuer Eignungs-Check — ${n} (${volumen})`,
+        fields: { Name: n, "E-Mail": em, Telefon: fullPhone, ...Object.fromEntries(QUESTIONS.map((q, i) => [q.label, answers[i] as string])) },
+      },
+    );
+    if (!r.ok) {
+      setStatus("error");
+      setErr(r.reason === "network" ? QUIZ.errNetwork : r.reason === "rate" ? QUIZ.errRate : QUIZ.errInvalid);
+      return;
+    }
     /* Qualified = wants to invest within ~6 months (every volume option is ≥ 100k) */
     const qualified = zeitpunkt !== "Erst informieren";
-    const attribution = getAttribution();
-    const ts = new Date().toLocaleString("de-DE", { timeZone: "Europe/Berlin", dateStyle: "short", timeStyle: "short" });
-
-    try {
-      const res = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          access_key: WEB3FORMS_KEY,
-          subject: `Neuer Eignungs-Check — ${n} (${volumen})`,
-          from_name: "Marokko Investment",
-          replyto: em,
-          Name: n,
-          "E-Mail": em,
-          Telefon: fullPhone,
-          ...Object.fromEntries(QUESTIONS.map((q, i) => [q.label, answers[i]])),
-          Einschätzung: qualified ? "Qualifiziert (Investition in ≤ 6 Monaten)" : "Möchte sich erst informieren",
-          Quelle: Object.keys(attribution).length ? Object.entries(attribution).map(([k, v]) => `${k}=${v}`).join(" · ") : "direkt / unbekannt",
-          Seite: location.href.split("?")[0],
-          Zeitpunkt: ts,
-        }),
-      });
-      const data = await res.json();
-      if (!data.success) throw new Error(data.message);
-      const extra = { volumen, ziel, erfahrung, zeitpunkt };
-      const user = { email: em, phone: fullPhone, name: n };
-      trackLead(FORM_NAME, user, extra);
-      if (qualified) trackQualifiedLead(FORM_NAME, user, extra);
-      setStatus("done");
-    } catch {
-      setStatus("error");
-      setErr(QUIZ.errNetwork);
-    }
+    const extra = { volumen, ziel, erfahrung, zeitpunkt };
+    const user = { email: em, phone: fullPhone, name: n };
+    trackLead(FORM_NAME, user, extra);
+    if (qualified) trackQualifiedLead(FORM_NAME, user, extra);
+    setStatus("done");
   };
 
   return (

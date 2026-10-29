@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { trackLead } from "@/lib/tracking";
+import { submitLead } from "@/lib/submitLead";
 import Logo from "@/components/Logo";
 import s from "./memorandum.module.css";
 import { TRANSLATIONS, LANGS, type Lang } from "./i18n";
-import { DOCS, withDoc, type DocKey, type DocMail } from "./docs";
+import { DOCS, withDoc, type DocKey } from "./docs";
 
 /* ── Scroll-triggered reveal hook ── */
 type RevealDir = "up" | "left" | "right" | "scale";
@@ -34,7 +35,7 @@ const GRUND_META = [
   { num: "03", img: "/images/solar-farm.jpg" },
 ];
 const STEP_NUMS = ["01", "02", "03"];
-const FOOTER_DOC_HREFS = ["/memorandum", "/dealflow", "/due-diligence", "/family-office", "/thesis"];
+const FOOTER_DOC_HREFS = (["memorandum", "dealflow", "due-diligence", "family-office", "thesis"] as const).map((k) => DOCS[k].path);
 const FOOTER_CONTACT_HREFS = ["#", "#", "mailto:kontakt@marokkoinvestment.de"];
 const FOOTER_LEGAL_HREFS = ["/impressum", "/datenschutz", "/datenschutz#cookies"];
 const PDF_TAGS = ["DE", "FR", "AR", "EN"];
@@ -76,129 +77,6 @@ function CheckIcon() {
       <path d="M5.5 9.5l2.5 2.5 5-5" stroke="#B08D45" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
-}
-
-/* ── Branded email: RECEIVER (info@tylotech.de) ── */
-function buildReceiverEmail(name: string, email: string, phone: string, ts: string, d: DocMail) {
-  return `
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;max-width:580px;margin:0 auto;background:#0C0A07;color:#f5ede0;border-radius:12px;overflow:hidden;">
-  <div style="background:linear-gradient(135deg,#1A1710,#12100C);padding:40px 40px 32px;border-bottom:1px solid rgba(176,141,69,0.15);">
-    <div style="text-align:center;margin-bottom:28px;">
-      <span style="font-size:11px;letter-spacing:0.35em;text-transform:uppercase;color:#B08D45;font-family:'Courier New',monospace;">✦ Marokko Investment ✦</span>
-    </div>
-    <h1 style="margin:0 0 8px;font-size:26px;font-weight:400;color:#f5ede0;font-family:Georgia,'Times New Roman',serif;text-align:center;">Neue Anfrage: ${d.label}</h1>
-    <p style="margin:0;font-size:14px;color:rgba(245,237,224,0.45);text-align:center;">Ein neuer Interessent möchte ${d.acc} erhalten.</p>
-  </div>
-  <div style="padding:32px 40px;">
-    <div style="background:rgba(176,141,69,0.06);border:1px solid rgba(176,141,69,0.15);border-radius:10px;padding:24px 28px;">
-      <table style="width:100%;border-collapse:collapse;">
-        <tr>
-          <td style="padding:0 0 20px;border-bottom:1px solid rgba(176,141,69,0.1);">
-            <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(176,141,69,0.7);font-family:'Courier New',monospace;margin-bottom:6px;">Name</div>
-            <div style="font-size:17px;color:#f5ede0;font-weight:500;">${name}</div>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:20px 0;border-bottom:1px solid rgba(176,141,69,0.1);">
-            <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(176,141,69,0.7);font-family:'Courier New',monospace;margin-bottom:6px;">E-Mail</div>
-            <a href="mailto:${email}" style="font-size:16px;color:#B08D45;text-decoration:none;font-weight:500;">${email}</a>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:20px 0;border-bottom:1px solid rgba(176,141,69,0.1);">
-            <table style="width:100%;border-collapse:collapse;"><tr>
-              <td style="width:50%;vertical-align:top;">
-                <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(176,141,69,0.7);font-family:'Courier New',monospace;margin-bottom:6px;">Telefon</div>
-                <div style="font-size:15px;color:rgba(245,237,224,0.75);">${phone}</div>
-              </td>
-              <td style="width:50%;vertical-align:top;">
-                <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(176,141,69,0.7);font-family:'Courier New',monospace;margin-bottom:6px;">Zeitpunkt</div>
-                <div style="font-size:15px;color:rgba(245,237,224,0.75);">${ts}</div>
-              </td>
-            </tr></table>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:20px 0 0;">
-            <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(176,141,69,0.7);font-family:'Courier New',monospace;margin-bottom:6px;">Dokument</div>
-            <div style="font-size:15px;color:rgba(245,237,224,0.75);">${d.label}</div>
-          </td>
-        </tr>
-      </table>
-    </div>
-    <div style="padding:28px 0 8px;text-align:center;">
-      <a href="mailto:${email}?subject=Marokko%20Investment%20%E2%80%94%20${encodeURIComponent(d.label)}&body=Sehr%20geehrte(r)%20${encodeURIComponent(name)}%2C%0A%0Avielen%20Dank%20f%C3%BCr%20Ihr%20Interesse%20an%20${encodeURIComponent(d.dat)}.%0A%0A"
-         style="display:inline-block;background:#B08D45;color:#0C0A07;padding:14px 36px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;">Interessenten antworten →</a>
-    </div>
-  </div>
-  <div style="text-align:center;padding:20px 40px;border-top:1px solid rgba(176,141,69,0.08);">
-    <span style="font-size:11px;color:rgba(245,237,224,0.2);">Marokko Investment · marokkoinvestment.de</span>
-  </div>
-</div>`.trim();
-}
-
-/* ── Branded email: SENDER (auto-reply to requester) ── */
-function buildSenderEmail(name: string, d: DocMail) {
-  const firstName = name.split(" ")[0];
-  return `
-<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;max-width:580px;margin:0 auto;background:#0C0A07;color:#f5ede0;border-radius:12px;overflow:hidden;">
-  <div style="background:linear-gradient(135deg,#1A1710,#12100C);padding:40px 40px 32px;border-bottom:1px solid rgba(176,141,69,0.15);">
-    <div style="text-align:center;margin-bottom:28px;">
-      <span style="font-size:11px;letter-spacing:0.35em;text-transform:uppercase;color:#B08D45;font-family:'Courier New',monospace;">✦ Marokko Investment ✦</span>
-    </div>
-    <h1 style="margin:0 0 8px;font-size:26px;font-weight:400;color:#f5ede0;font-family:Georgia,'Times New Roman',serif;text-align:center;">Ihre Anfrage ist eingegangen</h1>
-    <p style="margin:0;font-size:14px;color:rgba(245,237,224,0.45);text-align:center;">Vielen Dank für Ihr Interesse an ${d.dat}.</p>
-  </div>
-  <div style="padding:36px 40px;">
-    <p style="font-size:15px;color:rgba(245,237,224,0.7);line-height:1.8;margin:0 0 24px;">
-      Sehr geehrte(r) ${firstName},
-    </p>
-    <p style="font-size:15px;color:rgba(245,237,224,0.7);line-height:1.8;margin:0 0 24px;">
-      wir haben Ihre Anfrage erhalten und prüfen diese persönlich. Sie erhalten ${d.acc} in der Regel innerhalb von 24 Stunden per E-Mail.
-    </p>
-    <div style="background:rgba(176,141,69,0.06);border:1px solid rgba(176,141,69,0.15);border-radius:10px;padding:24px 28px;margin:0 0 24px;">
-      <p style="margin:0 0 4px;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(176,141,69,0.7);font-family:'Courier New',monospace;">Ihr angefordertes Dokument</p>
-      <p style="margin:0;font-size:16px;color:#f5ede0;font-weight:500;">${d.title}</p>
-      <p style="margin:8px 0 0;font-size:12px;color:rgba(245,237,224,0.35);font-family:'Courier New',monospace;">${d.meta}</p>
-    </div>
-    <p style="font-size:15px;color:rgba(245,237,224,0.7);line-height:1.8;margin:0 0 24px;">
-      <strong style="color:#f5ede0;">Was passiert als Nächstes?</strong>
-    </p>
-    <table style="width:100%;border-collapse:collapse;margin:0 0 28px;">
-      <tr>
-        <td style="padding:12px 16px 12px 0;vertical-align:top;width:32px;">
-          <span style="display:inline-block;width:24px;height:24px;border-radius:50%;background:rgba(176,141,69,0.12);color:#B08D45;font-size:11px;font-weight:600;text-align:center;line-height:24px;font-family:'Courier New',monospace;">1</span>
-        </td>
-        <td style="padding:12px 0;font-size:14px;color:rgba(245,237,224,0.6);border-bottom:1px solid rgba(176,141,69,0.08);">Wir prüfen Ihre Angaben persönlich.</td>
-      </tr>
-      <tr>
-        <td style="padding:12px 16px 12px 0;vertical-align:top;">
-          <span style="display:inline-block;width:24px;height:24px;border-radius:50%;background:rgba(176,141,69,0.12);color:#B08D45;font-size:11px;font-weight:600;text-align:center;line-height:24px;font-family:'Courier New',monospace;">2</span>
-        </td>
-        <td style="padding:12px 0;font-size:14px;color:rgba(245,237,224,0.6);border-bottom:1px solid rgba(176,141,69,0.08);">Sie erhalten ggf. eine kurze Verifizierung per SMS.</td>
-      </tr>
-      <tr>
-        <td style="padding:12px 16px 12px 0;vertical-align:top;">
-          <span style="display:inline-block;width:24px;height:24px;border-radius:50%;background:rgba(176,141,69,0.12);color:#B08D45;font-size:11px;font-weight:600;text-align:center;line-height:24px;font-family:'Courier New',monospace;">3</span>
-        </td>
-        <td style="padding:12px 0;font-size:14px;color:rgba(245,237,224,0.6);">${d.nom} wird Ihnen per E-Mail zugestellt.</td>
-      </tr>
-    </table>
-    <p style="font-size:14px;color:rgba(245,237,224,0.45);line-height:1.7;margin:0 0 8px;">
-      Bei Rückfragen erreichen Sie uns jederzeit unter <a href="mailto:info@tylotech.de" style="color:#B08D45;text-decoration:none;">info@tylotech.de</a>
-    </p>
-    <p style="font-size:14px;color:rgba(245,237,224,0.45);line-height:1.7;margin:0;">
-      Mit freundlichen Grüßen,<br/>
-      <strong style="color:rgba(245,237,224,0.6);">Jawad Malloul</strong><br/>
-      <span style="font-size:12px;color:rgba(245,237,224,0.3);">Marokko Investment</span>
-    </p>
-  </div>
-  <div style="text-align:center;padding:20px 40px;border-top:1px solid rgba(176,141,69,0.08);">
-    <span style="font-size:11px;color:rgba(245,237,224,0.2);">Marokko Investment · marokkoinvestment.de</span>
-    <br/>
-    <span style="font-size:10px;color:rgba(245,237,224,0.1);line-height:2;">Diese E-Mail wurde automatisch versendet. Bitte antworten Sie nicht direkt auf diese Nachricht.</span>
-  </div>
-</div>`.trim();
 }
 
 export default function DocumentPage({ doc }: { doc: DocKey }) {
@@ -309,50 +187,23 @@ export default function DocumentPage({ doc }: { doc: DocKey }) {
     setFormStatus("loading");
     setErrorMsg("");
 
-    const ts = new Date().toLocaleString("de-DE", { timeZone: "Europe/Berlin", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
     const n = name.trim();
     const em = email.trim();
-    const ph = phone.trim() || "–";
+    const ph = phone.trim();
+    const fullPhone = ph ? (ph.startsWith("+") || ph.startsWith("00") ? ph : `+49 ${ph.replace(/^0/, "")}`) : "";
 
-    try {
-      /* ── 1) Notification to info@tylotech.de ── */
-      const notif = fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          access_key: "241ac8bf-f24f-4a36-b8f4-364360c35415",
-          subject: `Neue Anfrage: ${d.mail.label} — ${n}`,
-          from_name: "Marokko Investment",
-          replyto: em,
-          Name: n,
-          "E-Mail": em,
-          Telefon: ph,
-          Dokument: d.mail.label,
-          Zeitpunkt: ts,
-          message: buildReceiverEmail(n, em, ph, ts, d.mail),
-        }),
-      });
-
-      /* ── 2) Auto-reply to the sender ── */
-      const reply = fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          access_key: "241ac8bf-f24f-4a36-b8f4-364360c35415",
-          subject: "Ihre Anfrage — Marokko Investment",
-          from_name: "Marokko Investment",
-          replyto: "info@tylotech.de",
-          to: em,
-          message: buildSenderEmail(n, d.mail),
-        }),
-      });
-
-      const [res1] = await Promise.all([notif, reply]);
-      const data = await res1.json();
-      if (data.success) { trackLead(d.mail.label, { email: em, phone: phone.trim(), name: n }); setFormStatus("success"); setName(""); setEmail(""); setPhone(""); }
-      else { setErrorMsg(data.message ?? t.errGeneric); setFormStatus("error"); }
-    } catch { setErrorMsg(t.errNetwork); setFormStatus("error"); }
-  }, [name, email, phone, hp, consent, t, d]);
+    const r = await submitLead(
+      { form: doc, name: n, email: em, phone: fullPhone, consent, website: hp },
+      { subject: `Neue Anfrage: ${d.mail.label} — ${n}`, fields: { Name: n, "E-Mail": em, Telefon: fullPhone || "–", Dokument: d.mail.label } },
+    );
+    if (r.ok) {
+      trackLead(d.mail.label, { email: em, phone: fullPhone, name: n });
+      setFormStatus("success"); setName(""); setEmail(""); setPhone("");
+    } else {
+      setErrorMsg(r.reason === "network" ? t.errNetwork : t.errGeneric);
+      setFormStatus("error");
+    }
+  }, [name, email, phone, hp, consent, t, d, doc]);
 
   return (
     <div className={`${s.page} ${mounted ? s.mounted : ""} ${rtl ? s.rtl : ""}`} dir={rtl ? "rtl" : "ltr"} lang={lang.toLowerCase()}>

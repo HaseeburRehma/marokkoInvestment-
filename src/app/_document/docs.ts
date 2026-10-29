@@ -40,7 +40,7 @@ interface DocCopy {
 
 export const DOCS: Record<DocKey, { path: string; mail: DocMail; copy?: Record<Lang, DocCopy> }> = {
   memorandum: {
-    path: "/memorandum",
+    path: "/marokko-investoren-memorandum",
     mail: {
       label: "Investoren-Memorandum",
       title: "Das vertrauliche Investoren-Memorandum",
@@ -53,7 +53,7 @@ export const DOCS: Record<DocKey, { path: string; mail: DocMail; copy?: Record<L
 
   /* ─────────────── 02 · DEAL-FLOW-REPORT ─────────────── */
   dealflow: {
-    path: "/dealflow",
+    path: "/marokko-investment-chancen",
     mail: {
       label: "Deal-Flow-Report",
       title: "Der Deal-Flow-Report",
@@ -160,7 +160,7 @@ export const DOCS: Record<DocKey, { path: string; mail: DocMail; copy?: Record<L
 
   /* ─────────────── 03 · DUE-DILIGENCE-ANALYSE ─────────────── */
   "due-diligence": {
-    path: "/due-diligence",
+    path: "/marokko-due-diligence-analyse",
     mail: {
       label: "Due-Diligence-Analyse",
       title: "Die Due-Diligence-Analyse",
@@ -271,7 +271,7 @@ export const DOCS: Record<DocKey, { path: string; mail: DocMail; copy?: Record<L
 
   /* ─────────────── 04 · FAMILY-OFFICE-BRIEFING ─────────────── */
   "family-office": {
-    path: "/family-office",
+    path: "/family-office-nordafrika",
     mail: {
       label: "Family-Office-Briefing",
       title: "Das Family-Office-Briefing",
@@ -378,7 +378,7 @@ export const DOCS: Record<DocKey, { path: string; mail: DocMail; copy?: Record<L
 
   /* ─────────────── 05 · THESIS PAPER ─────────────── */
   thesis: {
-    path: "/thesis",
+    path: "/marokko-investment-these",
     mail: {
       label: "Thesis Paper",
       title: "Das Thesis Paper",

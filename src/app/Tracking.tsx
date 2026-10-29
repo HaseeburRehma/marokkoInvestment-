@@ -66,12 +66,12 @@ function loadScripts() {
 
 /* Ad landing pages: each sends ViewContent so campaigns can retarget per page */
 const LANDING_PAGES: Record<string, string> = {
-  "/memorandum": "Investoren-Memorandum",
-  "/dealflow": "Deal-Flow-Report",
-  "/due-diligence": "Due-Diligence-Analyse",
-  "/family-office": "Family-Office-Briefing",
-  "/thesis": "Thesis Paper",
-  "/eignungs-check": "Eignungs-Check",
+  "/marokko-investoren-memorandum": "Investoren-Memorandum",
+  "/marokko-investment-chancen": "Deal-Flow-Report",
+  "/marokko-due-diligence-analyse": "Due-Diligence-Analyse",
+  "/family-office-nordafrika": "Family-Office-Briefing",
+  "/marokko-investment-these": "Thesis Paper",
+  "/marokko-investieren-eignungscheck": "Eignungs-Check",
 };
 
 export default function Tracking() {
