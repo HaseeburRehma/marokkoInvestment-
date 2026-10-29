@@ -121,7 +121,8 @@ export function trackQuizStep(form: string, step: number, question: string, answ
     pushDataLayer("quiz_start", { form_name: form });
   }
   trackMeta("QuizStep", { content_name: form, step, question, answer }, {}, true);
-  pushDataLayer("quiz_step", { form_name: form, step, question, answer });
+  /* numbered event names, so GA4 funnels work without custom dimensions */
+  pushDataLayer(`quiz_step_${step}`, { form_name: form, step, question, answer });
   trackClarity("quiz_step", { [`quiz_${question}`]: answer });
 }
 
