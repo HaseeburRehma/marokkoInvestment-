@@ -95,8 +95,8 @@ export default function DocumentPage({ doc }: { doc: DocKey }) {
     const p = new URLSearchParams(window.location.search).get("lang");
     const found = LANGS.find((l) => l.code.toLowerCase() === (p ?? "").toLowerCase());
     if (found) {
-      const id = requestAnimationFrame(() => setLang(found.code));
-      return () => cancelAnimationFrame(id);
+      const id = setTimeout(() => setLang(found.code), 0);
+      return () => clearTimeout(id);
     }
   }, []);
 
@@ -124,16 +124,17 @@ export default function DocumentPage({ doc }: { doc: DocKey }) {
     return () => document.removeEventListener("click", close);
   }, [langOpen]);
 
-  /* Scroll reveal for everything marked data-reveal */
+  /* Scroll reveal for everything marked data-reveal; re-run after a language
+     switch so any element React re-created is observed too */
   useEffect(() => {
-    const els = root.current?.querySelectorAll<HTMLElement>("[data-reveal]") ?? [];
+    const els = root.current?.querySelectorAll<HTMLElement>(`[data-reveal]:not(.${s.in})`) ?? [];
     const io = new IntersectionObserver(
       (entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add(s.in); io.unobserve(e.target); } }),
       { threshold: 0.12, rootMargin: "0px 0px -6% 0px" },
     );
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
-  }, []);
+  }, [lang]);
 
   /* Header glass + timeline rail fill, one rAF per scroll */
   useEffect(() => {
@@ -252,7 +253,7 @@ export default function DocumentPage({ doc }: { doc: DocKey }) {
             </div>
           </div>
           <ul className={s.assure}>
-            {t.benefits.map((b, i) => <li key={b} data-reveal style={delay(i)}><Check />{b}</li>)}
+            {t.benefits.map((b, i) => <li key={i} data-reveal style={delay(i)}><Check />{b}</li>)}
           </ul>
         </div>
 
@@ -304,7 +305,7 @@ export default function DocumentPage({ doc }: { doc: DocKey }) {
       <div className={s.wrap}>
         <div className={s.strip}>
           {t.strip.map((c, i) => (
-            <div key={c.title} className={s.stripItem} data-reveal style={delay(i)}>
+            <div key={i} className={s.stripItem} data-reveal style={delay(i)}>
               <strong>{c.title}</strong>
               <span>{c.sub}</span>
             </div>
@@ -336,7 +337,7 @@ export default function DocumentPage({ doc }: { doc: DocKey }) {
         </div>
         <div className={s.sectors}>
           {t.sektoren.map((sk, i) => (
-            <div key={sk.name} className={s.sector} data-reveal style={delay(i)}>
+            <div key={i} className={s.sector} data-reveal style={delay(i)}>
               <strong>{sk.name}</strong>
               <span>{sk.desc}</span>
             </div>
@@ -352,7 +353,7 @@ export default function DocumentPage({ doc }: { doc: DocKey }) {
             <p className={s.lead}>{t.inhaltSub}</p>
             <ol className={s.toc}>
               {t.inhaltItems.map((item, i) => (
-                <li key={item} data-reveal style={delay(i, 80)}><b>{String(i + 1).padStart(2, "0")}</b><span>{item}</span></li>
+                <li key={i} data-reveal style={delay(i, 80)}><b>{String(i + 1).padStart(2, "0")}</b><span>{item}</span></li>
               ))}
             </ol>
           </div>
@@ -385,7 +386,7 @@ export default function DocumentPage({ doc }: { doc: DocKey }) {
           </div>
           <div className={s.offices}>
             {t.offices.map((o, i) => (
-              <div key={o.city} className={s.office} data-reveal style={delay(i, 110)}>
+              <div key={i} className={s.office} data-reveal style={delay(i, 110)}>
                 <ArchMark big />
                 <h3>{o.city}</h3>
                 <p>{o.desc}</p>
@@ -408,7 +409,7 @@ export default function DocumentPage({ doc }: { doc: DocKey }) {
             const right = i % 2 === 1;
             const last = i === t.grundsaetze.length - 1;
             return (
-              <div key={g.label} className={`${s.tlRow} ${right ? s.tlRight : ""} ${last ? s.tlLast : ""}`} data-tl>
+              <div key={i} className={`${s.tlRow} ${right ? s.tlRight : ""} ${last ? s.tlLast : ""}`} data-tl>
                 <div className={s.tlCol} data-reveal>
                   <span className={s.tlLabel}>{String(i + 1).padStart(2, "0")} · {g.label}</span>
                   <h3>{g.title}</h3>
@@ -434,7 +435,7 @@ export default function DocumentPage({ doc }: { doc: DocKey }) {
         </div>
         <div className={s.steps}>
           {t.ablaufSteps.map((step, i) => (
-            <div key={step.title} className={s.step} data-reveal style={delay(i, 120)}>
+            <div key={i} className={s.step} data-reveal style={delay(i, 120)}>
               <span className={s.stepNum}>{String(i + 1).padStart(2, "0")}</span>
               <h3>{step.title}</h3>
               <p>{step.text}</p>
@@ -458,7 +459,7 @@ export default function DocumentPage({ doc }: { doc: DocKey }) {
         </div>
         <div className={s.faqList} data-reveal style={delay(1, 120)}>
           {t.faqs.map((f, i) => (
-            <Faq key={f.q} id={`faq-${i}`} q={f.q} a={f.a} open={openFaq === i} onToggle={() => setOpenFaq(openFaq === i ? null : i)} />
+            <Faq key={i} id={`faq-${i}`} q={f.q} a={f.a} open={openFaq === i} onToggle={() => setOpenFaq(openFaq === i ? null : i)} />
           ))}
         </div>
       </section>
@@ -475,7 +476,7 @@ export default function DocumentPage({ doc }: { doc: DocKey }) {
             <a className={s.secondary} href="mailto:kontakt@marokkoinvestment.de">{t.ctaSecondary}</a>
           </div>
           <ul className={s.closingChecks}>
-            {t.closingBenefits.map((b) => <li key={b}><Check />{b}</li>)}
+            {t.closingBenefits.map((b, i) => <li key={i}><Check />{b}</li>)}
           </ul>
         </div>
       </section>
@@ -495,11 +496,11 @@ export default function DocumentPage({ doc }: { doc: DocKey }) {
             </div>
             <div className={s.footCol}>
               <h4>{t.footerDocsH}</h4>
-              {t.footerDocs.map((label, i) => <a key={label} href={FOOTER_DOC_HREFS[i]} aria-current={FOOTER_DOC_HREFS[i] === d.path ? "page" : undefined}>{label}</a>)}
+              {t.footerDocs.map((label, i) => <a key={i} href={FOOTER_DOC_HREFS[i]} aria-current={FOOTER_DOC_HREFS[i] === d.path ? "page" : undefined}>{label}</a>)}
             </div>
             <div className={s.footCol}>
               <h4>{t.footerContactH}</h4>
-              {t.footerContact.map((c, i) => <a key={c} href={FOOTER_CONTACT_HREFS[i]}>{c}</a>)}
+              {t.footerContact.map((c, i) => <a key={i} href={FOOTER_CONTACT_HREFS[i]}>{c}</a>)}
             </div>
             <div className={s.footCol}>
               <h4>{t.footerLegalH}</h4>

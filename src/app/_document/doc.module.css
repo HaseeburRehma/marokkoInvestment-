@@ -25,10 +25,13 @@
   z-index: 1;
   background: var(--paper);
   color: var(--ink);
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-inter), var(--font-arabic), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
 }
+/* Arabic: no negative tracking (it breaks letter joins), a little more leading */
+.rtl, .rtl * { letter-spacing: 0 !important; }
+.rtl :is(.heroTitle, .h2, .h2a, .h2c) { line-height: 1.35; }
 .page :where(h1, h2, h3, h4, p, figure, ul, ol) { margin: 0; padding: 0; }
 .page :where(ul, ol) { list-style: none; }
 .page :where(img) { display: block; max-width: 100%; }
@@ -136,7 +139,7 @@
 .form { margin-top: 26px; display: flex; flex-direction: column; gap: 18px; }
 .field { display: flex; flex-direction: column; gap: 8px; }
 .field > span:first-child { font-size: 13px; line-height: 16px; font-weight: 500; color: var(--ink-2); }
-.field input, .phone { height: 52px; width: 100%; border-radius: 13px; border: 1px solid var(--line); background: var(--paper); font: 400 15px var(--font-inter), system-ui, sans-serif; color: var(--ink); transition: border-color 0.25s, box-shadow 0.25s; }
+.field input, .phone { height: 52px; width: 100%; border-radius: 13px; border: 1px solid var(--line); background: var(--paper); font: 400 15px var(--font-inter), var(--font-arabic), system-ui, sans-serif; color: var(--ink); transition: border-color 0.25s, box-shadow 0.25s; }
 .field > input { padding: 0 16px; }
 .field input::placeholder { color: var(--faint); }
 .field > input:focus, .phone:focus-within { outline: none; border-color: var(--gold); box-shadow: 0 0 0 4px rgba(176, 141, 69, 0.14); }
@@ -305,7 +308,6 @@
 .abschluss { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; padding: 92px 80px; border-radius: 44px; background: var(--card); border: 1px solid var(--line); text-align: center; }
 .archPhoto { position: absolute; top: 7px; width: 216px; height: 700px; border-radius: 108px 108px 0 0; overflow: hidden; }
 .archPhoto img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.6s var(--ease); }
-.archPhoto::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(252, 250, 245, 0.38) 0%, rgba(252, 250, 245, 0.66) 68%, rgba(252, 250, 245, 0.98) 100%); }
 .archL { left: 17px; }
 .archR { right: 17px; }
 .abschluss:hover .archPhoto img { transform: scale(1.04); }
@@ -379,7 +381,6 @@
   .fragen { flex-direction: column; gap: 40px; }
   .fragenHead { position: static; width: auto; }
   .abschluss { padding: 80px 48px; }
-  .archPhoto { opacity: 0.55; }
   .footTop { flex-wrap: wrap; gap: 48px; }
   .brand { flex-basis: 100%; }
   .footBottom { flex-direction: column; gap: 14px; }
