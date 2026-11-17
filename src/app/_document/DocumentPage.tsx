@@ -17,7 +17,7 @@ import { DOCS, withDoc, type DocKey } from "./docs";
 const NAV_HREFS = ["#dokument", "#ablauf", "#vertrauen", "#fragen"];
 const GRUND_IMG = ["/images/doc/buero.webp", "/images/doc/hafen.webp", "/images/doc/solar.webp"];
 const FOOTER_DOC_HREFS = (["memorandum", "dealflow", "due-diligence", "family-office", "thesis"] as const).map((k) => DOCS[k].path);
-const FOOTER_CONTACT_HREFS = ["#vertrauen", "#vertrauen", "mailto:kontakt@marokkoinvestment.de"];
+const FOOTER_CONTACT_HREFS = ["#vertrauen", "#vertrauen", "mailto:info@marokkoinvestment.de"];
 const PDF_TAGS = ["DE", "FR", "AR", "EN"];
 
 const Arrow = () => (
@@ -450,7 +450,7 @@ export default function DocumentPage({ doc }: { doc: DocKey }) {
           <span className={s.tag}>{t.faqPill}</span>
           <h2 className={s.h2}>{t.faqTitle}</h2>
           <p className={s.headSub}>{t.faqSub}</p>
-          <a className={s.contact} href="mailto:kontakt@marokkoinvestment.de">
+          <a className={s.contact} href="mailto:info@marokkoinvestment.de">
             <span className={s.avatar} aria-hidden="true">
               <svg width="50" height="50" viewBox="0 0 50 50" fill="none"><path d="M18.4 33.5c0-4 2.9-6.8 6.6-6.8s6.6 2.8 6.6 6.8M28.8 20c0 2.2-1.7 4-3.8 4s-3.8-1.8-3.8-4 1.7-4 3.8-4 3.8 1.8 3.8 4Z" stroke="#FCFAF5" strokeWidth="1.6" strokeLinecap="round" /></svg>
             </span>
@@ -473,7 +473,7 @@ export default function DocumentPage({ doc }: { doc: DocKey }) {
           <p className={s.closingSub}>{t.closingSub}</p>
           <div className={s.closingBtns}>
             <button type="button" className={s.primaryInline} onClick={scrollToForm}>{t.cta} <Arrow /></button>
-            <a className={s.secondary} href="mailto:kontakt@marokkoinvestment.de">{t.ctaSecondary}</a>
+            <a className={s.secondary} href="mailto:info@marokkoinvestment.de">{t.ctaSecondary}</a>
           </div>
           <ul className={s.closingChecks}>
             {t.closingBenefits.map((b, i) => <li key={i}><Check />{b}</li>)}
