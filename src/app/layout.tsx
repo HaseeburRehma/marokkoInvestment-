@@ -63,7 +63,11 @@ export const metadata: Metadata = {
       "Investiere in das Marokko von morgen. Private Equity — Nur auf Einladung.",
   },
   robots: { index: true, follow: true },
-  verification: { google: "KOZTH7Lcl9qRoXpHAvfm-MxpomM6MQoFFgPE-8VBWRw" },
+  verification: {
+    google: "KOZTH7Lcl9qRoXpHAvfm-MxpomM6MQoFFgPE-8VBWRw",
+    /* Meta Business "marokkoinvestment" (2388320518366249) → Domains */
+    other: { "facebook-domain-verification": "gcz762nyob6jtbas27nx4zadn2n4fc" },
+  },
 };
 
 export const viewport: Viewport = {

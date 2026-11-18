@@ -3,7 +3,14 @@
 
 export const CONSENT_KEY = "mi_consent";
 export const CONSENT_EVENT = "mi-consent";
-export const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || "1126487640138424";
+/* Every Meta dataset the site reports to:
+   1839973283980705 "Marokko Invest" — used by the campaigns in ad account 998559009392013
+   1126487640138424 "Marokko Investment" — first dataset (business 283938361462031)
+   NEXT_PUBLIC_META_PIXEL_IDS (comma-separated) overrides, e.g. a dummy id locally. */
+export const PIXEL_IDS = (process.env.NEXT_PUBLIC_META_PIXEL_IDS || "1839973283980705,1126487640138424")
+  .split(",")
+  .map((v) => v.trim())
+  .filter(Boolean);
 export const CLARITY_ID = "z4pw3kfntb";
 export const GTM_ID = "GTM-P9JSMVLL";
 
@@ -56,14 +63,14 @@ export function trackMeta(
   if (getConsent() !== "granted") return;
   const eventId = newEventId();
 
-  if (window.fbq && PIXEL_ID) {
+  if (window.fbq && PIXEL_IDS.length) {
     const [fn, ...rest] = (user.name ?? "").trim().toLowerCase().split(/\s+/);
     const am: Record<string, string> = {};
     if (user.email) am.em = user.email.trim().toLowerCase();
     if (user.phone) am.ph = user.phone.replace(/\D/g, "");
     if (fn) am.fn = fn;
     if (rest.length) am.ln = rest.join(" ");
-    if (Object.keys(am).length) window.fbq("init", PIXEL_ID, am);
+    if (Object.keys(am).length) for (const id of PIXEL_IDS) window.fbq("init", id, am);
     window.fbq(custom ? "trackCustom" : "track", event, params, { eventID: eventId });
   }
 

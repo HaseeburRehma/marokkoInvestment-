@@ -20,10 +20,19 @@ const ALLOWED = new Set([
 
 const sha = (v: string) => createHash("sha256").update(v).digest("hex");
 
+/* Each dataset needs its own Conversions API token (Events Manager → dataset →
+   Settings → Conversions API → Generate access token). Datasets without a token
+   are skipped; the browser pixel still reports to them. */
+function datasets() {
+  return [
+    { id: "1839973283980705", token: process.env.META_CAPI_TOKEN_2 }, // "Marokko Invest" (campaigns)
+    { id: "1126487640138424", token: process.env.META_CAPI_TOKEN }, // "Marokko Investment"
+  ].filter((d): d is { id: string; token: string } => Boolean(d.token?.trim()));
+}
+
 export async function POST(req: NextRequest) {
-  const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID || "1126487640138424";
-  const token = process.env.META_CAPI_TOKEN;
-  if (!pixelId || !token) return NextResponse.json({ skipped: true });
+  const targets = datasets();
+  if (!targets.length) return NextResponse.json({ skipped: true });
 
   let body: {
     event?: string;
@@ -83,18 +92,22 @@ export async function POST(req: NextRequest) {
   };
   if (process.env.META_TEST_EVENT_CODE) payload.test_event_code = process.env.META_TEST_EVENT_CODE;
 
-  try {
-    const res = await fetch(
-      `https://graph.facebook.com/v21.0/${pixelId}/events?access_token=${encodeURIComponent(token)}`,
-      { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) },
-    );
-    if (!res.ok) {
-      console.error("Meta CAPI error:", res.status, (await res.text()).slice(0, 300));
-      return NextResponse.json({ error: "capi failed" }, { status: 502 });
-    }
-    return NextResponse.json({ success: true });
-  } catch (err) {
-    console.error("Meta CAPI fetch failed:", err instanceof Error ? err.message : err);
-    return NextResponse.json({ error: "capi failed" }, { status: 502 });
-  }
+  const results = await Promise.all(
+    targets.map(async ({ id, token }) => {
+      try {
+        const res = await fetch(
+          `https://graph.facebook.com/v21.0/${id}/events?access_token=${encodeURIComponent(token.trim())}`,
+          { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) },
+        );
+        if (!res.ok) console.error(`Meta CAPI error (${id}):`, res.status, (await res.text()).slice(0, 300));
+        return res.ok;
+      } catch (err) {
+        console.error(`Meta CAPI fetch failed (${id}):`, err instanceof Error ? err.message : err);
+        return false;
+      }
+    }),
+  );
+  const sent = results.filter(Boolean).length;
+  if (!sent) return NextResponse.json({ error: "capi failed" }, { status: 502 });
+  return NextResponse.json({ success: true, datasets: sent });
 }

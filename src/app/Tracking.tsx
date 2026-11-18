@@ -6,7 +6,7 @@ import {
   CLARITY_ID,
   CONSENT_EVENT,
   GTM_ID,
-  PIXEL_ID,
+  PIXEL_IDS,
   getConsent,
   setConsent,
   trackClarity,
@@ -43,7 +43,7 @@ function loadScripts() {
     document.head.appendChild(t);
   }
 
-  if (PIXEL_ID && !w.fbq) {
+  if (PIXEL_IDS.length && !w.fbq) {
     /* Standard Meta Pixel bootstrap */
     const n = function (...args: unknown[]) {
       const self = n as unknown as { callMethod?: (...a: unknown[]) => void; queue: unknown[] };
@@ -60,7 +60,7 @@ function loadScripts() {
     t.async = true;
     t.src = "https://connect.facebook.net/en_US/fbevents.js";
     document.head.appendChild(t);
-    window.fbq!("init", PIXEL_ID);
+    for (const id of PIXEL_IDS) window.fbq!("init", id);
   }
 }
 
