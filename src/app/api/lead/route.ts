@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { DOCS, type DocKey } from "@/app/_document/docs";
 import { QUESTIONS } from "@/app/_eignungs-check/content";
 import { leadInbox, mailConfigured, sendMail } from "@/lib/mailer";
+import { sendToTyloHQ, tylohqConfigured, type Attribution } from "@/lib/tylohq";
 import {
   docAutoReplyHtml,
   docAutoReplyText,
@@ -35,6 +36,15 @@ function limited(ip: string) {
 const str = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
 const EMAIL = /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']{2,}$/;
 const ATTR_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid", "gclid"];
+
+/* "https://www.marokkoinvestment.de/x?y" → "/x" (TyloHQ stores the path only) */
+const pathOf = (url: string) => {
+  try {
+    return new URL(url).pathname.slice(0, 300);
+  } catch {
+    return "";
+  }
+};
 
 export async function POST(req: NextRequest) {
   /* Same-site only: other websites can't post leads through us */
@@ -88,10 +98,13 @@ export async function POST(req: NextRequest) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "unknown";
   if (limited(ip)) return NextResponse.json({ error: "rate" }, { status: 429 });
 
-  /* Not configured yet: tell the browser to use its fallback */
-  if (!mailConfigured()) return NextResponse.json({ error: "mail_unconfigured" }, { status: 503 });
+  /* Neither e-mail nor TyloHQ configured: tell the browser to use its fallback */
+  const mailOn = mailConfigured();
+  const hqOn = tylohqConfigured();
+  if (!mailOn && !hqOn) return NextResponse.json({ error: "mail_unconfigured" }, { status: 503 });
 
   const src = (body.source ?? {}) as Record<string, unknown>;
+  const attribution: Attribution = Object.fromEntries(ATTR_KEYS.filter((k) => typeof src[k] === "string" && src[k]).map((k) => [k, str(src[k], 200)]));
   const source = ATTR_KEYS.filter((k) => typeof src[k] === "string" && src[k]).map((k) => `${k}=${str(src[k], 200)}`).join(" · ");
   const page = str(body.page, 300);
   const ts = new Date().toLocaleString("de-DE", { timeZone: "Europe/Berlin", dateStyle: "short", timeStyle: "short" });
@@ -113,25 +126,34 @@ export async function POST(req: NextRequest) {
   const title = doc ? `Neue Anfrage: ${doc.mail.label}` : "Neuer Eignungs-Check";
   const subject = doc ? `Neue Anfrage: ${doc.mail.label} — ${name}` : `Neuer Eignungs-Check — ${name} (${answers[0][1]})`;
 
-  try {
-    await sendMail({
-      to: leadInbox(),
-      replyTo: email,
-      subject,
-      html: notificationHtml({
-        title,
-        intro: doc ? `Ein neuer Interessent möchte ${doc.mail.acc} erhalten.` : "Ein Interessent hat den Eignungs-Check abgeschlossen.",
-        rows,
-        email,
-        name,
-        replySubject: doc ? `Marokko Investment — ${doc.mail.label}` : "Marokko Investment — Ihr Eignungs-Check",
-      }),
-      text: rowsText(title, rows),
-    });
-  } catch (err) {
-    console.error("Lead mail failed:", err instanceof Error ? err.message : err);
-    return NextResponse.json({ error: "mail_failed" }, { status: 502 });
-  }
+  /* Team e-mail and TyloHQ in parallel; the lead counts as delivered if either arrived */
+  const mailJob = mailOn
+    ? sendMail({
+        to: leadInbox(),
+        replyTo: email,
+        subject,
+        html: notificationHtml({
+          title,
+          intro: doc ? `Ein neuer Interessent möchte ${doc.mail.acc} erhalten.` : "Ein Interessent hat den Eignungs-Check abgeschlossen.",
+          rows,
+          email,
+          name,
+          replySubject: doc ? `Marokko Investment — ${doc.mail.label}` : "Marokko Investment — Ihr Eignungs-Check",
+        }),
+        text: rowsText(title, rows),
+      }).then(
+        () => true,
+        (err) => {
+          console.error("Lead mail failed:", err instanceof Error ? err.message : err);
+          return false;
+        },
+      )
+    : Promise.resolve(false);
+  const hqFields = rows.filter(([k, v]) => v !== "–" && k !== "Quelle" && k !== "Seite" && k !== "Zeitpunkt").map(([label, value]) => ({ label, value }));
+  const hqJob = hqOn ? sendToTyloHQ(doc ? doc.mail.label : "Eignungs-Check", hqFields, { ...attribution, page: pathOf(page) }) : Promise.resolve(false);
+  const [mailed, stored] = await Promise.all([mailJob, hqJob]);
+  if (!mailed && !stored) return NextResponse.json({ error: "mail_failed" }, { status: 502 });
+  if (!mailOn) return NextResponse.json({ success: true, qualified });
 
   /* Confirmation to the visitor; the lead is already safe, so failures only log */
   try {
