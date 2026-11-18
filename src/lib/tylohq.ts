@@ -11,7 +11,15 @@ export type Attribution = Partial<Record<"utm_source" | "utm_medium" | "utm_camp
   page?: string;
 };
 
-export const tylohqConfigured = () => /^https:\/\//.test(process.env.TYLOHQ_LEADS_URL?.trim() ?? "");
+/* Strips spaces and quotes people paste around values in the Vercel UI */
+const clean = (v?: string) => v?.trim().replace(/^["']+|["']+$/g, "").trim() || undefined;
+const leadsUrl = () => clean(process.env.TYLOHQ_LEADS_URL);
+
+export const tylohqConfigured = () => {
+  const url = leadsUrl();
+  if (url && !/^https:\/\//.test(url)) console.error("tylohq: TYLOHQ_LEADS_URL is set but is not an https:// URL");
+  return Boolean(url && /^https:\/\//.test(url));
+};
 
 /* The TyloHQ webhook body: answers as label/value pairs, form name, ad attribution.
    utm_campaign / utm_term / utm_content carry the Meta campaign, ad set and ad names,
@@ -38,9 +46,9 @@ export function tylohqPayload(form: string, fields: Field[], a: Attribution, id:
 
 /* POST the lead to TyloHQ. true when TyloHQ stored it (or already had it). */
 export async function sendToTyloHQ(form: string, fields: Field[], a: Attribution): Promise<boolean> {
-  const url = process.env.TYLOHQ_LEADS_URL?.trim();
+  const url = leadsUrl();
   if (!url || !/^https:\/\//.test(url)) return false;
-  const key = process.env.TYLOHQ_LEADS_KEY?.trim();
+  const key = clean(process.env.TYLOHQ_LEADS_KEY);
   try {
     const res = await fetch(url, {
       method: "POST",
@@ -49,6 +57,7 @@ export async function sendToTyloHQ(form: string, fields: Field[], a: Attribution
       signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) console.error("tylohq: lead not stored", res.status);
+    else console.log("tylohq: lead stored", res.status);
     return res.ok;
   } catch (err) {
     console.error("tylohq: lead not sent", err instanceof Error ? err.name : "error");
